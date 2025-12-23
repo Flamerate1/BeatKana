@@ -6772,7 +6772,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 151418926665541735, guid: 98de54e29f14284498d2a56e07b0cfff, type: 3}
       propertyPath: m_Name
-      value: TimelineBeatPrefab
+      value: BeatPrefab (for edit)
+      objectReference: {fileID: 0}
+    - target: {fileID: 151418926665541735, guid: 98de54e29f14284498d2a56e07b0cfff, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 882008516473778696, guid: 98de54e29f14284498d2a56e07b0cfff, type: 3}
       propertyPath: m_Pivot.x
@@ -6857,10 +6861,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 151418926665541735, guid: 98de54e29f14284498d2a56e07b0cfff, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98de54e29f14284498d2a56e07b0cfff, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

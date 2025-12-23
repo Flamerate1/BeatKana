@@ -29,21 +29,20 @@ public class Timeline : MonoBehaviour
 
     
 
-    // Beat[] beats;
-    List<Beat> beats;
+    List<Beat> beats; /// List of beat classes
+    GameObject timelineBeatPrefab; // the actual visual beat prefab that reacts to input
+    TimelineBeat[] beatObjects; // the list of beat objects that can be manipulated
 
     TMP_InputField inputField;
-    TextMeshPro currentWordTMP;
-    TextMeshPro currentKanaTMP;
+    TMP_Text currentWordTMP;
+    TMP_Text currentKanaTMP;
 
-    GameObject timelineBeatPrefab;
-    List<TimelineBeat> timelineBeats;
 
     void Start()
     {
         inputField = GameManager.inputField;
-        currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TextMeshPro>();
-        currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TextMeshPro>();
+        currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
+        currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
 
         // BPM based on level data
         BPS = BPM / 60;
@@ -56,20 +55,43 @@ public class Timeline : MonoBehaviour
         beats = new List<Beat>();
 
         // Loop through data and create beats
-        beats = GenerateBeatsSequential();
+        GenerateBeatListSequential(ref beats);
+
+        // Make BeatObjects
+        beatObjects = MakeBeats(beats);
     }
 
-    // this method creates beats on the timeline in sequential order that they were created in the array
-    List<Beat> GenerateBeatsSequential()
+    // this method creates the beat class instances in a list in sequential order that they were created in the array
+    void GenerateBeatListSequential(ref List<Beat> beatsList)
     {
-        List<Beat> result = new List<Beat>();
+        Beat.AddEmptyBeats(ref beatsList, levelPreBeats);
 
         for (int i = 0; i < beatElementsBank.Length; i++)
         {
-            Beat.ProcessElement(ref beats, beatElementsBank[i]);
-            Beat.AddEmptyBeats(ref beats, betweenBeats);
+            Beat.ProcessElement(ref beatsList, beatElementsBank[i]);
+            Beat.AddEmptyBeats(ref beatsList, betweenBeats);
         }
-        return result;
+    }
+
+    // This method instantiates the beat prefabs into child objects of the Timeline. 
+    TimelineBeat[] MakeBeats(List<Beat> beatList)
+    {
+        // TimelineBeat component array to return
+        TimelineBeat[] beatObjects = new TimelineBeat[beatList.Count];
+
+        // Iterate over all of the beat class instances
+        for (int i = 0; i < beatList.Count; i++)
+        {
+            if (beatList[i].text == string.Empty) continue; // skip if empty string beat class
+            Vector3 offset = Vector3.right * BeatDistance * 0.5f; // Offset by half a BeatDistance (places beat square in the center of the correct bounds)
+            Vector3 pos = Vector3.right * BeatDistance * i + offset; 
+
+            GameObject gameObject = Instantiate(timelineBeatPrefab, pos, Quaternion.identity, transform); // Create the object
+            beatObjects[i] = gameObject.GetComponent<TimelineBeat>(); // Grab the component
+            beatObjects[i].SetBeat(beatList[i]); 
+        }
+
+        return beatObjects;
     }
 
     public void KeyUpdate()
@@ -77,7 +99,6 @@ public class Timeline : MonoBehaviour
         if (!duringKeyRecognition) return; // Quit if can't score now.
 
         string text = inputField.text;
-        Debug.Log("KeyUpdate: " + text);
         
         // check text match!
         //
@@ -89,7 +110,6 @@ public class Timeline : MonoBehaviour
             float accuracy = 1f - (Mathf.Abs(aroundBeatTime) / maxBeatError);
             float round = Mathf.Floor(accuracy * 100f) / 100f;
             accuracy = Mathf.Clamp01(round);
-            Debug.Log(accuracy.ToString());
         }
     }
 

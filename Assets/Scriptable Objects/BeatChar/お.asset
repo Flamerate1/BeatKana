@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db30282c1338243409cf6c532df75528, type: 3}
   m_Name: "\u304A"
   m_EditorClassIdentifier: Assembly-CSharp::BeatChar
-  character: 0
+  text: "\u304A"
+  romaji: o
+  clip: {fileID: 8300000, guid: 7d7ad7e3bcdbb7449b3a9267aa1b17c9, type: 3}
