@@ -8,6 +8,7 @@ TagManager:
   - InputField
   - CurrentWord
   - CurrentKana
+  - TimelineCameraPosition
   layers:
   - Default
   - TransparentFX

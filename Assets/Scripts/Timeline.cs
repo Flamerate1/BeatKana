@@ -115,6 +115,8 @@ public class Timeline : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.gamePaused) return; // don't update if game is paused
+
         beatTime += Time.deltaTime / BPS;
         currentBeat = Mathf.FloorToInt(beatTime);
         aroundBeatTime = (beatTime - currentBeat) - 0.5f;
