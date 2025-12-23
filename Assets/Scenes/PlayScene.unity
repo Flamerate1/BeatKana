@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 15570054}
   - component: {fileID: 15570053}
   - component: {fileID: 15570052}
+  - component: {fileID: 15570055}
   m_Layer: 5
   m_Name: sa
   m_TagString: Untagged
@@ -240,6 +241,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 15570050}
   m_CullTransparentMesh: 1
+--- !u!114 &15570055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15570050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: sa
+  keys:
+  - "\u3055"
+  - "\u3057"
+  - "\u3059"
+  - "\u305B"
+  - "\u305D"
 --- !u!1 &25168925
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,6 +699,7 @@ GameObject:
   - component: {fileID: 258959191}
   - component: {fileID: 258959190}
   - component: {fileID: 258959189}
+  - component: {fileID: 258959192}
   m_Layer: 5
   m_Name: ya
   m_TagString: Untagged
@@ -788,6 +809,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 258959187}
   m_CullTransparentMesh: 1
+--- !u!114 &258959192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258959187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: ya
+  keys:
+  - "\u3084"
+  - "\uFF08"
+  - "\u3086"
+  - "\uFF09"
+  - "\u3088"
 --- !u!1 &324276242
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,7 +885,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u21E6"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -982,7 +1022,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -1486,6 +1526,7 @@ GameObject:
   - component: {fileID: 446506691}
   - component: {fileID: 446506690}
   - component: {fileID: 446506689}
+  - component: {fileID: 446506692}
   m_Layer: 5
   m_Name: na
   m_TagString: Untagged
@@ -1595,6 +1636,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 446506687}
   m_CullTransparentMesh: 1
+--- !u!114 &446506692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446506687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: na
+  keys:
+  - "\u306A"
+  - "\u306B"
+  - "\u306C"
+  - "\u306D"
+  - "\u306E"
 --- !u!1 &453195357
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,7 +1833,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u3042a1"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -2376,6 +2436,7 @@ GameObject:
   - component: {fileID: 584543113}
   - component: {fileID: 584543112}
   - component: {fileID: 584543111}
+  - component: {fileID: 584543114}
   m_Layer: 5
   m_Name: ha
   m_TagString: Untagged
@@ -2485,6 +2546,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 584543109}
   m_CullTransparentMesh: 1
+--- !u!114 &584543114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584543109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: ha
+  keys:
+  - "\u306F"
+  - "\u3072"
+  - "\u3075"
+  - "\u3078"
+  - "\u307B"
 --- !u!1 &586213447
 GameObject:
   m_ObjectHideFlags: 0
@@ -2542,7 +2622,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u23CE"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -2763,7 +2843,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u3089"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -2900,7 +2980,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u309B\u309C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -3037,7 +3117,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u3001"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -3174,10 +3254,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u232B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
-  m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a6d66ecd5f77df74c9f06cf3f95e4a28, type: 2}
+  m_sharedMaterial: {fileID: 6940206952947700757, guid: a6d66ecd5f77df74c9f06cf3f95e4a28, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3266,6 +3346,7 @@ GameObject:
   - component: {fileID: 924801738}
   - component: {fileID: 924801737}
   - component: {fileID: 924801736}
+  - component: {fileID: 924801739}
   m_Layer: 5
   m_Name: ma
   m_TagString: Untagged
@@ -3375,6 +3456,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924801734}
   m_CullTransparentMesh: 1
+--- !u!114 &924801739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924801734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: ma
+  keys:
+  - "\u307E"
+  - "\u307F"
+  - "\u3080"
+  - "\u3081"
+  - "\u3082"
 --- !u!1 &1008193435
 GameObject:
   m_ObjectHideFlags: 0
@@ -3666,7 +3766,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u308F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -3879,6 +3979,7 @@ GameObject:
   - component: {fileID: 1230251215}
   - component: {fileID: 1230251214}
   - component: {fileID: 1230251213}
+  - component: {fileID: 1230251216}
   m_Layer: 5
   m_Name: wa
   m_TagString: Untagged
@@ -3988,6 +4089,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1230251211}
   m_CullTransparentMesh: 1
+--- !u!114 &1230251216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230251211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: wa
+  keys:
+  - "\u308F"
+  - "\u3092"
+  - "\u3093"
+  - "\u30FC"
+  - "\uFF5E"
 --- !u!1 &1240827985
 GameObject:
   m_ObjectHideFlags: 0
@@ -4068,6 +4188,7 @@ GameObject:
   - component: {fileID: 1330728319}
   - component: {fileID: 1330728318}
   - component: {fileID: 1330728317}
+  - component: {fileID: 1330728320}
   m_Layer: 5
   m_Name: ra
   m_TagString: Untagged
@@ -4177,6 +4298,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1330728315}
   m_CullTransparentMesh: 1
+--- !u!114 &1330728320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330728315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: ra
+  keys:
+  - "\u3089"
+  - "\u308A"
+  - "\u308B"
+  - "\u308C"
+  - "\u308D"
 --- !u!1 &1379301325
 GameObject:
   m_ObjectHideFlags: 0
@@ -4234,7 +4374,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u3084"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -4371,7 +4511,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u3055"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -4508,7 +4648,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u306F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -4645,7 +4785,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u306A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -5024,7 +5164,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u263A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -5161,7 +5301,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u2423"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -5253,6 +5393,7 @@ GameObject:
   - component: {fileID: 1673931000}
   - component: {fileID: 1673930999}
   - component: {fileID: 1673930998}
+  - component: {fileID: 1673931001}
   m_Layer: 5
   m_Name: ta
   m_TagString: Untagged
@@ -5362,6 +5503,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673930996}
   m_CullTransparentMesh: 1
+--- !u!114 &1673931001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673930996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: ta
+  keys:
+  - "\u305F"
+  - "\u3061"
+  - "\u3064"
+  - "\u3066"
+  - "\u3068"
 --- !u!1 &1710693721
 GameObject:
   m_ObjectHideFlags: 0
@@ -5419,7 +5579,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u304B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -5511,6 +5671,7 @@ GameObject:
   - component: {fileID: 1740930664}
   - component: {fileID: 1740930663}
   - component: {fileID: 1740930662}
+  - component: {fileID: 1740930665}
   m_Layer: 5
   m_Name: ka
   m_TagString: Untagged
@@ -5620,6 +5781,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1740930660}
   m_CullTransparentMesh: 1
+--- !u!114 &1740930665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740930660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: ka
+  keys:
+  - "\u304B"
+  - "\u304D"
+  - "\u304F"
+  - "\u3051"
+  - "\u3053"
 --- !u!1 &1796005534
 GameObject:
   m_ObjectHideFlags: 0
@@ -5890,6 +6070,7 @@ GameObject:
   - component: {fileID: 1819688538}
   - component: {fileID: 1819688537}
   - component: {fileID: 1819688536}
+  - component: {fileID: 1819688539}
   m_Layer: 5
   m_Name: dakuten
   m_TagString: Untagged
@@ -5999,6 +6180,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1819688534}
   m_CullTransparentMesh: 1
+--- !u!114 &1819688539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819688534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: dakuten
+  keys:
+  - big
+  - "\u309B"
+  - "\u5C0F"
+  - "\u309C"
+  - "\u5927"
 --- !u!1 &1820204118
 GameObject:
   m_ObjectHideFlags: 0
@@ -6193,7 +6393,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u307E"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -6520,6 +6720,7 @@ GameObject:
   - component: {fileID: 2001121417}
   - component: {fileID: 2001121416}
   - component: {fileID: 2001121415}
+  - component: {fileID: 2001121418}
   m_Layer: 5
   m_Name: puncuation
   m_TagString: Untagged
@@ -6629,6 +6830,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2001121413}
   m_CullTransparentMesh: 1
+--- !u!114 &2001121418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001121413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3820ec9b3a2f7094f9908d8d6dad32c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KanaButton
+  key: punctuation
+  keys:
+  - "\u3001"
+  - "\u3002"
+  - "\uFF1F"
+  - "\uFF01"
+  - "\u2026"
 --- !u!1 &2027393329
 GameObject:
   m_ObjectHideFlags: 0
@@ -6823,7 +7043,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u305F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
@@ -7081,7 +7301,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042"
+  m_text: "\u21D2"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}
   m_sharedMaterial: {fileID: 7249317091310280917, guid: 8a12ed5880908184ebcc7381124487eb, type: 2}

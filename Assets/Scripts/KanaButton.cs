@@ -8,7 +8,7 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 public class KanaButton : MonoBehaviour
 {
     [SerializeField] string key;
-    [SerializeField] string[] keys; // All 5 keys the single button is capable of inputting
+    [SerializeField] string[] keys = new string[5]; // All 5 keys the single button is capable of inputting
 
     float maxCenterDistScale = 2f; // How much to divide the corner distance from center
     float maxCenterDist;
@@ -85,7 +85,7 @@ public class KanaButton : MonoBehaviour
         kanaKeyboard = GetComponentInParent<KanaKeyboard>();
         rectTransform = GetComponent<RectTransform>();
         //cam = GameManager.cam;
-
+        
         rectTransform.GetPositionAndRotation(out Vector3 pos, out Quaternion quat);
         buttonCenter = (Vector2)pos;
 
