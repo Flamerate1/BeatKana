@@ -1,16 +1,21 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public static Camera cam;
-    static int lastWidth;
-    static int lastHeight;
-    public static float cam_z;
     public static TMP_InputField inputField;
 
-    static RectTransform CanvasRectTransform;
+    // Camera Positioning
+    public static Camera cam;
+    public static event Action OnResolutionChanged;
+    static int lastWidth = 0;
+    static int lastHeight = 0;
+    public static float cam_z;
+    public static Vector3[] camWorldCorners;
+
+    public static RectTransform CanvasRectTransform;
     static RectTransform TimelinePositionRectTransform;
 
     public static bool gamePaused = false;
@@ -25,26 +30,32 @@ public class GameManager : MonoBehaviour
         inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
         CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent <RectTransform>();
         TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
-        //Screen.orientation = ScreenOrientation.LandscapeLeft;
-
-        UpdateCameraPosition();
     }
-    
+
+    // Keeps the camera's position at the designated UI location set by TimelinePositionRectTransform
     public static void UpdateCameraPosition()
     {
-
+        // Get world position of canvas center
         CanvasRectTransform.GetPositionAndRotation(out Vector3 pos1, out Quaternion quat1);
         pos1 = cam.ScreenToWorldPoint(pos1);
+        
+        // Get world position of timeline position within the canvas
         TimelinePositionRectTransform.GetPositionAndRotation(out Vector3 pos2, out Quaternion quat2);
         pos2 = cam.ScreenToWorldPoint(pos2);
 
+        // Get relative world position
         Vector3 relPos = pos1 - pos2;
-        relPos.z = cam_z;
-        
+        relPos.z = cam_z; // overwrite z coordinate 
 
-        Debug.Log(relPos.ToString());
-
+        // apply position to camera
         cam.transform.position = relPos;
+
+        // Now grab cam stats
+        camWorldCorners = new Vector3[4];
+        CanvasRectTransform.GetWorldCorners(camWorldCorners);
+        for (int i = 0; i < camWorldCorners.Length; i++)
+            camWorldCorners[i] = cam.ScreenToWorldPoint(camWorldCorners[i]);
+
     }
 
     private void Update()
@@ -55,6 +66,7 @@ public class GameManager : MonoBehaviour
             lastWidth = Screen.width;
             lastHeight = Screen.height;
             UpdateCameraPosition();
+            OnResolutionChanged?.Invoke();
         }
     }
 

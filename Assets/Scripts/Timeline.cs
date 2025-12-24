@@ -13,6 +13,7 @@ public class Timeline : MonoBehaviour
 
     [SerializeField] int levelPreBeats = 3;
     [SerializeField] int betweenBeats = 1;
+    [SerializeField] int levelPostBeats = 2;
     //[SerializeField] int eachBeatElementCount = 2;
     //[SerializeField] int levelBeatElementAmount = 10;
 
@@ -20,19 +21,22 @@ public class Timeline : MonoBehaviour
     float BPS; // Calculate from BPM / 60 seconds per minute;
     float timelineSpeed; // Calculated from BPM and BeatDistance. Physical speed that the positions moves with
     int previousBeat = 0; // Used to play code at every beat increment.
-    [SerializeField] float beatTime = 0f; // Accumulated actual time that has passed
-    [SerializeField] int currentBeat = 0; // The current beat which is seconds / BPM
-    [SerializeField] float aroundBeatTime = 0f; // time between now and the actual current beat point.
+    float beatTime = 0f; // Accumulated actual time that has passed
+    int currentBeat = 0; // The current beat which is seconds / BPM
+    float aroundBeatTime = 0f; // time between now and the actual current beat point.
     bool canStartRecognition = false;
     bool canStopRecognition = false;
     bool duringKeyRecognition = false;
 
     
 
-    List<Beat> beats; /// List of beat classes
+    List<Beat> beatList; /// List of beat classes
     GameObject timelineBeatPrefab; // the actual visual beat prefab that reacts to input
     TimelineBeat[] beatObjects; // the list of beat objects that can be manipulated
 
+    // Visual Section
+    GameObject beatLine; // Visual guideline made at every beat position. 
+    LineRenderer progressBar; // Bar that display how far through the level the player is. 
     TMP_InputField inputField;
     TMP_Text currentWordTMP;
     TMP_Text currentKanaTMP;
@@ -40,6 +44,7 @@ public class Timeline : MonoBehaviour
 
     void Start()
     {
+        progressBar = GameObject.FindWithTag("ProgressBar").GetComponent<LineRenderer>();
         inputField = GameManager.inputField;
         currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
         currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
@@ -50,15 +55,18 @@ public class Timeline : MonoBehaviour
         // BeatDistance based on level data (maybe)
         timelineSpeed = (BPM / 60) * BeatDistance;
 
+        // Load beatLine
+        beatLine = Resources.Load<GameObject>("BeatLine");
+
         // Load TimelineBeat prefab, create beats list and generate TimelineBeats
         timelineBeatPrefab = Resources.Load<GameObject>("TimelineBeatPrefab");
-        beats = new List<Beat>();
+        beatList = new List<Beat>();
 
         // Loop through data and create beats
-        GenerateBeatListSequential(ref beats);
+        GenerateBeatListSequential(ref beatList);
 
         // Make BeatObjects
-        beatObjects = MakeBeats(beats);
+        beatObjects = MakeBeats(beatList);
     }
 
     // this method creates the beat class instances in a list in sequential order that they were created in the array
@@ -71,6 +79,8 @@ public class Timeline : MonoBehaviour
             Beat.ProcessElement(ref beatsList, beatElementsBank[i]);
             Beat.AddEmptyBeats(ref beatsList, betweenBeats);
         }
+
+        Beat.AddEmptyBeats(ref beatsList, levelPostBeats);
     }
 
     // This method instantiates the beat prefabs into child objects of the Timeline. 
@@ -82,10 +92,12 @@ public class Timeline : MonoBehaviour
         // Iterate over all of the beat class instances
         for (int i = 0; i < beatList.Count; i++)
         {
-            if (beatList[i].text == string.Empty) continue; // skip if empty string beat class
             Vector3 offset = Vector3.right * BeatDistance * 0.5f; // Offset by half a BeatDistance (places beat square in the center of the correct bounds)
-            Vector3 pos = Vector3.right * BeatDistance * i + offset; 
+            Vector3 pos = Vector3.right * BeatDistance * i + offset;
+            
+            Instantiate(beatLine, pos, Quaternion.identity, transform); // Create beatLine guide objects
 
+            if (beatList[i].text == string.Empty) continue; // skip if empty string beat class
             GameObject gameObject = Instantiate(timelineBeatPrefab, pos, Quaternion.identity, transform); // Create the object
             beatObjects[i] = gameObject.GetComponent<TimelineBeat>(); // Grab the component
             beatObjects[i].SetBeat(beatList[i]); 
@@ -151,5 +163,17 @@ public class Timeline : MonoBehaviour
         float TimelinePos = beatTime * timelineSpeed;
         var pos = Vector3.right * (-TimelinePos);
         transform.position = pos;
+
+        // Update progress bar
+        var progressBarPos = progressBar.GetPosition(1);
+
+        var progress = beatTime / beatList.Count;
+        var cam_left = GameManager.camWorldCorners[0].x;
+        var cam_right = GameManager.camWorldCorners[2].x;
+        
+        var progress_rel_x = (cam_right - cam_left) * progress;
+        progressBarPos.x = progress_rel_x + cam_left;
+        progressBar.SetPosition(1, progressBarPos);
+
     }
 }
