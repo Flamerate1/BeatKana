@@ -30,11 +30,19 @@ public class GameManager : MonoBehaviour
         inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
         CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent <RectTransform>();
         TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
+
+
+        // Not fully decided functionality how this works
+        // When does the camera get updated and all other things reliant on the camera? 
+        UpdateCameraPosition();
     }
 
     // Keeps the camera's position at the designated UI location set by TimelinePositionRectTransform
     public static void UpdateCameraPosition()
     {
+        lastWidth = Screen.width;
+        lastHeight = Screen.height;
+
         // Get world position of canvas center
         CanvasRectTransform.GetPositionAndRotation(out Vector3 pos1, out Quaternion quat1);
         pos1 = cam.ScreenToWorldPoint(pos1);
@@ -55,7 +63,6 @@ public class GameManager : MonoBehaviour
         CanvasRectTransform.GetWorldCorners(camWorldCorners);
         for (int i = 0; i < camWorldCorners.Length; i++)
             camWorldCorners[i] = cam.ScreenToWorldPoint(camWorldCorners[i]);
-
     }
 
     private void Update()
@@ -63,8 +70,8 @@ public class GameManager : MonoBehaviour
         // Detect screen orientation
         if (Screen.width != lastWidth || Screen.height != lastHeight)
         {
-            lastWidth = Screen.width;
-            lastHeight = Screen.height;
+            //lastWidth = Screen.width;
+            //lastHeight = Screen.height;
             UpdateCameraPosition();
             OnResolutionChanged?.Invoke();
         }

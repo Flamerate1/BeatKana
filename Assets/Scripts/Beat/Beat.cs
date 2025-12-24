@@ -4,7 +4,7 @@ using UnityEngine;
 public class Beat
 {
     public string text; // Base hiragana text
-    public string character; // kanji or kana
+    public string word; // kanji or kana
     public string romaji; // english letters
     public Sprite sprite; // image like the object the word or phrase represents
     public AudioClip clip; // individual sound clip 
@@ -14,16 +14,16 @@ public class Beat
     public Beat(string text, string romaji, AudioClip clip) 
     {
         this.text = text;
-        this.character = string.Empty;
+        this.word = string.Empty;
         this.romaji = romaji;
         sprite = null;
         this.clip = clip;
         this.pitchIsHigh = false;
     }
-    public Beat(string text, string character, string romaji, Sprite sprite, AudioClip clip, bool pitchIsHigh)
+    public Beat(string text, string word, string romaji, Sprite sprite, AudioClip clip, bool pitchIsHigh)
     {
         this.text = text;
-        this.character = character; 
+        this.word = word; 
         this.romaji = romaji;
         this.sprite = sprite;
         this.clip = clip;
@@ -34,7 +34,7 @@ public class Beat
     public Beat()
     {
         this.text = string.Empty;
-        this.character = string.Empty;
+        this.word = string.Empty;
         this.romaji = string.Empty;
         this.sprite = null;
         this.clip = null;
@@ -63,12 +63,13 @@ public class Beat
             case BeatElement.ElementType.Word:
                 BeatWord wordElement = (BeatWord)element; // Cast to BeatWord
                 int beatListStartIndex = beatList.Count; // Get the starting point. 
-                for (int i = 0; i < wordElement.beatChars.Length; i++)
+                for (int i = 0; i < wordElement.beatChars.Length; i++) // Iterate through characters and add them to beatlist. 
                 {
                     ProcessElement(ref beatList, wordElement.beatChars[i]); // Add each character to beatlist. Populate list
+                    beatList[beatListStartIndex + i].word = wordElement.text;
                 }
 
-                if (wordElement.pitch == 0)
+                if (wordElement.pitch == 0) // heiban word
                 {
                     beatList[beatListStartIndex].pitchIsHigh = false;
                     for (int i = 1; i < wordElement.beatChars.Length; i++)
@@ -76,12 +77,10 @@ public class Beat
                         beatList[beatListStartIndex + i].pitchIsHigh = true;
                     }
                 }
-                else
+                else // nakadaka or oodaka
                 {
                     for (int i = 0; i < wordElement.beatChars.Length; i++)
                     {
-                        //int fromEnd = wordElement.beatChars.Length - i;
-                        //beatList[beatList.Count - i].pitchIsHigh = true;
                         bool isHigh = (i + 1) < wordElement.pitch; // Switches to low 
                         beatList[beatListStartIndex + i].pitchIsHigh = isHigh;
                     }

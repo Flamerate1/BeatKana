@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 
@@ -9,9 +7,13 @@ public abstract class BeatElement : ScriptableObject
     {
         Char,
         Word, 
-        Phrase
+        Phrase, 
+        Particle
     }
 
     ElementType elementType;
     public abstract ElementType GetElementType();
+    /* example
+     * public override ElementType GetElementType() {  return ElementType.Char; }
+     */
 }

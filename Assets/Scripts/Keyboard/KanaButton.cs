@@ -15,13 +15,25 @@ public class KanaButton : MonoBehaviour
     Vector2 buttonBL;
     Vector2 buttonTR;
     Vector2 buttonCenter;
+    Vector2 initialTouchPosition;
 
     RectTransform rectTransform;
     KanaKeyboard kanaKeyboard;
 
-    private void OnEnable() { TouchManager.TouchBegan += ButtonClicked; TouchManager.TouchEnded += ButtonRelease; TouchManager.TouchCanceled += ButtonRelease; }
-    private void OnDisable() { TouchManager.TouchBegan -= ButtonClicked; TouchManager.TouchEnded -= ButtonRelease; TouchManager.TouchCanceled -= ButtonRelease; }
-
+    private void OnEnable()
+    {
+        GameManager.OnResolutionChanged += ResetCorners;
+        TouchManager.TouchBegan += ButtonClicked;
+        TouchManager.TouchMoved += ButtonPressing;
+        TouchManager.TouchEnded += ButtonRelease; TouchManager.TouchCanceled += ButtonRelease;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnResolutionChanged -= ResetCorners;
+        TouchManager.TouchBegan -= ButtonClicked;
+        TouchManager.TouchMoved -= ButtonPressing;
+        TouchManager.TouchEnded -= ButtonRelease; TouchManager.TouchCanceled -= ButtonRelease;
+    }
     private void ButtonClicked(Touch touch)
     {
         if (touch.screenPosition.x > buttonBL.x &&
@@ -29,7 +41,23 @@ public class KanaButton : MonoBehaviour
             touch.screenPosition.x < buttonTR.x &&
             touch.screenPosition.y < buttonTR.y)
         {
+            initialTouchPosition = touch.screenPosition;
             TouchManager.Claim(key, touch.touchId);
+
+            var y_diff = buttonTR.y - buttonBL.y;
+            var pos = buttonCenter;
+            pos.y += y_diff;
+
+            kanaKeyboard.KanaButtonGuideActivate(buttonCenter, y_diff, keys);
+        }
+    }
+
+    private void ButtonPressing(Touch touch)
+    {
+        if (TouchManager.IsPressed(key))
+        {
+            var index = KeyDetect(initialTouchPosition, touch.screenPosition);
+            kanaKeyboard.KanaButtonGuideSetIndex(index);
         }
     }
 
@@ -38,10 +66,13 @@ public class KanaButton : MonoBehaviour
         if (TouchManager.IsPressed(key))
         {
             // Figure out which case based on KeyDetect index
-            string pressed_key = keys[KeyDetect(buttonCenter, touch.screenPosition)];
+            string pressed_key = keys[KeyDetect(initialTouchPosition, touch.screenPosition)];
 
             // Add this key to the TMP_InputField
             kanaKeyboard.InputToField(pressed_key);
+
+            // Deactivate the KanaButtonGuide
+            kanaKeyboard.KanaButtonGuideDeactivate();
         }
     }
 
@@ -49,7 +80,6 @@ public class KanaButton : MonoBehaviour
     {
         if (Vector2.Distance(touchPos, centerPos) < maxCenterDist) 
         {
-            //Debug.Log("Close");
             return 0;
         }
         else
@@ -84,8 +114,12 @@ public class KanaButton : MonoBehaviour
     {
         kanaKeyboard = GetComponentInParent<KanaKeyboard>();
         rectTransform = GetComponent<RectTransform>();
-        //cam = GameManager.cam;
-        
+    }
+
+
+    void ResetCorners()
+    {
+
         rectTransform.GetPositionAndRotation(out Vector3 pos, out Quaternion quat);
         buttonCenter = (Vector2)pos;
 

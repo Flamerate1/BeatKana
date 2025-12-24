@@ -6,6 +6,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class Timeline : MonoBehaviour
 {
+    [SerializeField] Level levelObject; // Optional Level scriptable object. 
+    bool isLevelLoaded = false;
+
     [SerializeField] int BPM = 60;
     [SerializeField] float BeatDistance = 1.0f;
     [SerializeField] float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
@@ -49,11 +52,28 @@ public class Timeline : MonoBehaviour
         currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
         currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
 
+        //LoadTimeline();
+    }
+
+    void LoadTimeline()
+    {
+        if (levelObject != null)
+        {
+            this.BPM = levelObject.BPM;
+            this.BeatDistance = levelObject.BeatDistance;
+            this.maxBeatError = levelObject.maxBeatError;
+            this.beatElementsBank = levelObject.beatElementsBank;
+
+            this.levelPreBeats = levelObject.levelPreBeats;
+            this.betweenBeats = levelObject.betweenBeats;
+            this.levelPostBeats = levelObject.levelPostBeats;
+        }
+
         // BPM based on level data
-        BPS = BPM / 60;
+        BPS = 60f / BPM;
 
         // BeatDistance based on level data (maybe)
-        timelineSpeed = (BPM / 60) * BeatDistance;
+        timelineSpeed = BPS * BeatDistance;
 
         // Load beatLine
         beatLine = Resources.Load<GameObject>("BeatLine");
@@ -67,6 +87,7 @@ public class Timeline : MonoBehaviour
 
         // Make BeatObjects
         beatObjects = MakeBeats(beatList);
+        isLevelLoaded = true;
     }
 
     // this method creates the beat class instances in a list in sequential order that they were created in the array
@@ -127,6 +148,7 @@ public class Timeline : MonoBehaviour
 
     void Update()
     {
+        if (!isLevelLoaded) return;
         if (GameManager.gamePaused) return; // don't update if game is paused
 
         beatTime += Time.deltaTime / BPS;
@@ -139,6 +161,19 @@ public class Timeline : MonoBehaviour
             previousBeat = currentBeat;
             canStartRecognition = true;
             canStopRecognition = true;
+
+            // Update Visuals based on current Beat class
+            if (currentBeat < beatList.Count)
+            {
+                currentKanaTMP.text = beatList[currentBeat].text;
+                currentWordTMP.text = beatList[currentBeat].word;
+            }
+            else
+            {
+
+                currentKanaTMP.text = string.Empty;
+                currentWordTMP.text = string.Empty;
+            }
         }
 
         if (canStartRecognition && aroundBeatTime >= -maxBeatError)
@@ -160,7 +195,9 @@ public class Timeline : MonoBehaviour
         
         // Update Timeline position over time
         // assumes seconds = meters
-        float TimelinePos = beatTime * timelineSpeed;
+        float TimelinePos = beatTime * BeatDistance;
+        //float TimelinePos = beatTime;
+        //float TimelinePos = beatTime / timelineSpeed;
         var pos = Vector3.right * (-TimelinePos);
         transform.position = pos;
 
