@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
@@ -19,22 +20,57 @@ public class GameManager : MonoBehaviour
     static RectTransform TimelinePositionRectTransform;
 
     public static bool gamePaused = false;
+
+    // Current Level Data
+    // Selected in main menu and grabbed by timeline in the playgame scene
+    public static Level currentLevel;
+    public static Level GetLevelThenNull() { Level level = currentLevel; currentLevel = null; return level; }
+    public static void SetLevel(Level level) { currentLevel = level; } 
+
     private void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
         if (instance == null)
             instance = this;
         else
             Destroy(gameObject);
-        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-        cam_z = cam.transform.position.z;
-        inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
-        CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent <RectTransform>();
-        TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
 
+        SceneManager.activeSceneChanged += OnSceneChange;
+
+        
 
         // Not fully decided functionality how this works
         // When does the camera get updated and all other things reliant on the camera? 
-        UpdateCameraPosition();
+        //UpdateCameraPosition();
+        // GameManagerScript is put higher in priority, so maybe its update code is working well. 
+    }
+
+    private void OnSceneChange(Scene current, Scene next)
+    {
+        string currentName = current.name;
+
+        if (currentName == null)
+        {
+            // Scene1 has been removed
+            currentName = "Replaced";
+        }
+
+        switch (next.name)
+        {
+            case "PlayScene":
+                cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+                cam_z = cam.transform.position.z;
+                inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
+                CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
+                TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
+                lastHeight = 0; lastWidth = 0;
+                break;
+            case "MainMenu":
+                cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+                break;
+        }
+
+        Debug.Log("Scenes: " + currentName + ", " + next.name);
     }
 
     // Keeps the camera's position at the designated UI location set by TimelinePositionRectTransform
@@ -67,11 +103,11 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (SceneManager.GetActiveScene().name != "PlayScene") { return; }
+
         // Detect screen orientation
         if (Screen.width != lastWidth || Screen.height != lastHeight)
         {
-            //lastWidth = Screen.width;
-            //lastHeight = Screen.height;
             UpdateCameraPosition();
             OnResolutionChanged?.Invoke();
         }

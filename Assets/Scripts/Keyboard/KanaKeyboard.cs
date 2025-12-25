@@ -29,7 +29,10 @@ public class KanaKeyboard : MonoBehaviour
 
 
 
-    public void InputFieldUpdated() { }
+    public void InputFieldUpdated() 
+    { 
+        // Empty and unused
+    }
 
     public void ResetInputField() { inputField.text = string.Empty; }
 
