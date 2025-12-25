@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using TMPro;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,6 +29,8 @@ public class GameManager : MonoBehaviour
     public static Level GetLevelThenNull() { Level level = currentLevel; currentLevel = null; return level; }
     public static void SetLevel(Level level) { currentLevel = level; }
 
+
+    private static string path;
     public static PlayerSaveData playerSaveData; // Stores level progression, currencies, etc
 
     private void Awake()
@@ -38,6 +42,10 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         SceneManager.activeSceneChanged += OnSceneChange;
+
+        path = Path.Combine(Application.persistentDataPath, "save.json");
+        LoadGame();
+        SaveGame(); // for testing save function
     }
 
     private void OnSceneChange(Scene current, Scene next)
@@ -115,17 +123,32 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game paused?: " + doPause.ToString());
     }
 
-    public void SaveGame()
+    public static void SaveGame()
     {
         // Grab playerSaveData from GameManager and put it into json to place into a save file. 
+        string json = JsonUtility.ToJson(playerSaveData, true);
+        File.WriteAllText(path, json);
+        Debug.Log(json);
+        Debug.Log("Saved to: " + path);
     }
 
-    void LoadGame()
+    static void LoadGame()
     {
         // Grab data from json and put it into GameManager's playerSaveData object. 
         // Update saveVersion
 
-        playerSaveData = new PlayerSaveData(); 
+        
+
+        if (!File.Exists(path))
+        {
+            Debug.LogWarning("No save file found, returning new save.");
+            playerSaveData = new PlayerSaveData();
+            return;
+        }
+        
+        string json = File.ReadAllText(path);
+        Debug.Log(json);
+        playerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
 
         // If no save data create default save file. 
     }

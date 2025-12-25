@@ -182,7 +182,6 @@ public class Timeline : MonoBehaviour
 
             // Update ScoreDisplay
             scoreDisplay.text = "Score: " + totalPoints.ToString();
-
         }
     }
 
@@ -257,7 +256,10 @@ public class Timeline : MonoBehaviour
     {
         GameManager.PauseGame(true);
 
-        // Save stats
+        // Update stats, then save game
+
+        GameManager.SaveGame();
+        
         // level ending transition
         // maybe goto a level success or failure screen with stats
         summaryScreen.gameObject.SetActive(true);
