@@ -20,6 +20,10 @@ public class KanaButton : MonoBehaviour
     RectTransform rectTransform;
     KanaKeyboard kanaKeyboard;
 
+    public void LockKey() { keyLocked = true; }
+    bool keyLocked = false;
+    
+
     private void OnEnable()
     {
         GameManager.OnResolutionChanged += ResetCorners;
@@ -36,6 +40,8 @@ public class KanaButton : MonoBehaviour
     }
     private void ButtonClicked(Touch touch)
     {
+        if (GameManager.gamePaused) return;
+        if (keyLocked) return;
         if (touch.screenPosition.x > buttonBL.x &&
             touch.screenPosition.y > buttonBL.y &&
             touch.screenPosition.x < buttonTR.x &&
@@ -76,8 +82,10 @@ public class KanaButton : MonoBehaviour
         }
     }
 
+    // Using initial and current position touch, detect which of the 5 keys are currently being selected. 
     private int KeyDetect(Vector2 centerPos, Vector2 touchPos)
     {
+        // If close to the initial touch, output the center "A" key
         if (Vector2.Distance(touchPos, centerPos) < maxCenterDist) 
         {
             return 0;

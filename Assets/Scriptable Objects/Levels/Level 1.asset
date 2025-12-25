@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f057d122c9bd12449f745c491ac0d42, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  BPM: 60
-  BeatDistance: 1
+  BPM: 20
+  BeatDistance: 3
   maxBeatError: 0.2
   beatElementsBank:
   - {fileID: 11400000, guid: 0f6b4a78ee5cb5144ae9ee2f2c402157, type: 2}
   - {fileID: 11400000, guid: fd2beb9140dd1144dad2ee52d53a9e2e, type: 2}
-  - {fileID: 11400000, guid: 3077b0e83ab7d6f479e4df2218705623, type: 2}
   - {fileID: 11400000, guid: 0f6b4a78ee5cb5144ae9ee2f2c402157, type: 2}
-  levelPreBeats: 3
+  - {fileID: 11400000, guid: fd2beb9140dd1144dad2ee52d53a9e2e, type: 2}
+  - {fileID: 11400000, guid: 0f6b4a78ee5cb5144ae9ee2f2c402157, type: 2}
+  - {fileID: 11400000, guid: fd2beb9140dd1144dad2ee52d53a9e2e, type: 2}
+  levelPreBeats: 1
   betweenBeats: 1
-  levelPostBeats: 2
+  levelPostBeats: 1

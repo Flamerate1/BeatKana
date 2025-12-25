@@ -11,4 +11,25 @@ public class Level : ScriptableObject
     public int levelPreBeats = 3;
     public int betweenBeats = 1;
     public int levelPostBeats = 2;
+
+    public void GetLevelData(
+        ref int BPM,
+        ref float BeatDistance,
+        ref float maxBeatError,
+        ref BeatElement[] beatElementsBank,
+
+        ref int levelPreBeats,
+        ref int betweenBeats,
+        ref int levelPostBeats
+        )
+    {
+        BPM = this.BPM;
+        BeatDistance = this.BeatDistance;
+        maxBeatError = this.maxBeatError;
+        beatElementsBank = this.beatElementsBank;
+
+        levelPreBeats = this.levelPreBeats;
+        betweenBeats = this.betweenBeats;
+        levelPostBeats = this.levelPostBeats;
+    }
 }

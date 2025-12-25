@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 public class Timeline : MonoBehaviour
 {
@@ -17,22 +15,26 @@ public class Timeline : MonoBehaviour
     [SerializeField] int levelPreBeats = 3;
     [SerializeField] int betweenBeats = 1;
     [SerializeField] int levelPostBeats = 2;
-    //[SerializeField] int eachBeatElementCount = 2;
-    //[SerializeField] int levelBeatElementAmount = 10;
 
 
     float BPS; // Calculate from BPM / 60 seconds per minute;
     float timelineSpeed; // Calculated from BPM and BeatDistance. Physical speed that the positions moves with
-    int previousBeat = 0; // Used to play code at every beat increment.
+    int previousBeatIndex = 0; // Used to play code at every beat increment.
     float beatTime = 0f; // Accumulated actual time that has passed
-    int currentBeat = 0; // The current beat which is seconds / BPM
+    int currentBeatIndex = 0; // The current beat which is seconds / BPM
     float aroundBeatTime = 0f; // time between now and the actual current beat point.
-    bool canStartRecognition = false;
-    bool canStopRecognition = false;
-    bool duringKeyRecognition = false;
+    bool canStartRecognition = false; // Enables single flip of duringKeyRecognition to true at start of input period. 
+    bool canStopRecognition = false; // Enables single flip of duringKeyRecognition to false at end of input period.  
+    bool duringKeyRecognition = false; // true during the moments when the player can input for the letter and score. 
+    float levelProgress = 0f; // Between 0 and 1 for how far the level has progressed
 
-    
+    // Performance stats
+    bool scoredSuccessfully = false; // resets during each input period. 
+    int totalPoints = 0; // Accumulated points
+    SummaryScreen summaryScreen;
 
+    // Beat Processing and note keeping
+    Beat currentBeat; // Reference to the current Beat class instance
     List<Beat> beatList; /// List of beat classes
     GameObject timelineBeatPrefab; // the actual visual beat prefab that reacts to input
     TimelineBeat[] beatObjects; // the list of beat objects that can be manipulated
@@ -43,6 +45,7 @@ public class Timeline : MonoBehaviour
     TMP_InputField inputField;
     TMP_Text currentWordTMP;
     TMP_Text currentKanaTMP;
+    TMP_Text scoreDisplay;
 
 
     void Start()
@@ -51,23 +54,48 @@ public class Timeline : MonoBehaviour
         inputField = GameManager.inputField;
         currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
         currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
+        scoreDisplay = GameObject.FindWithTag("ScoreDisplay").GetComponent<TMP_Text>();
+        summaryScreen = GameObject.FindWithTag("SummaryScreen").GetComponent<SummaryScreen>();
+        summaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
+        summaryScreen.gameObject.SetActive(false);
 
-        //LoadTimeline();
+        LoadTimeline();
     }
 
     void LoadTimeline()
     {
+        // Grab GameManager level if it has one
+        if (GameManager.currentLevel != null)
+        {
+            levelObject = GameManager.GetLevelThenNull();
+            Debug.Log("Grabbing GameManager's recorded level");
+        }
+        else
+        {
+            Debug.Log("Using stored level");
+        }
+
+        // Inititialize level data. 
+
         if (levelObject != null)
         {
-            this.BPM = levelObject.BPM;
-            this.BeatDistance = levelObject.BeatDistance;
-            this.maxBeatError = levelObject.maxBeatError;
-            this.beatElementsBank = levelObject.beatElementsBank;
+            Debug.Log("using either inspector stored or GameManager");
+            levelObject.GetLevelData(
+                ref BPM,
+                ref BeatDistance,
+                ref maxBeatError,
+                ref beatElementsBank,
 
-            this.levelPreBeats = levelObject.levelPreBeats;
-            this.betweenBeats = levelObject.betweenBeats;
-            this.levelPostBeats = levelObject.levelPostBeats;
+                ref levelPreBeats,
+                ref betweenBeats,
+                ref levelPostBeats
+            );
         }
+        else
+        {
+            Debug.Log("Using default inspector values");
+        }
+
 
         // BPM based on level data
         BPS = 60f / BPM;
@@ -127,22 +155,34 @@ public class Timeline : MonoBehaviour
         return beatObjects;
     }
 
-    public void KeyUpdate()
+    public void CheckBeat()
     {
-        if (!duringKeyRecognition) return; // Quit if can't score now.
+        // Guard clauses
+        if (GameManager.gamePaused || // Don't input if game is paused >:( CHEATER
+            !duringKeyRecognition || // Quit if can't score now.
+            scoredSuccessfully || // Don't search any longer if scored already. 
+            currentBeat.text == string.Empty // Don't search if currently an empty beat
+        ) return; 
 
         string text = inputField.text;
         
-        // check text match!
-        //
-        //
-
-        if (true) // if text match
+        if (text.Contains(currentBeat.text)) // if text match
         {
+            scoredSuccessfully = true;
             inputField.text = string.Empty;
-            float accuracy = 1f - (Mathf.Abs(aroundBeatTime) / maxBeatError);
-            float round = Mathf.Floor(accuracy * 100f) / 100f;
-            accuracy = Mathf.Clamp01(round);
+            float accuracy = 1f - (Mathf.Abs(aroundBeatTime) / maxBeatError); // Accuracy depending on distance to beat. 
+            float round = Mathf.Floor(accuracy * 100f) / 100f; // reduce to 2 decimal places
+            accuracy = Mathf.Clamp01(round); // Clamp between 0 and 1
+
+            var points = 20 + Mathf.RoundToInt(accuracy * 100f);
+            Debug.Log("Scored: " + points.ToString());
+
+            // Add to total score. 
+            totalPoints += points;
+
+            // Update ScoreDisplay
+            scoreDisplay.text = "Score: " + totalPoints.ToString();
+
         }
     }
 
@@ -152,25 +192,28 @@ public class Timeline : MonoBehaviour
         if (GameManager.gamePaused) return; // don't update if game is paused
 
         beatTime += Time.deltaTime / BPS;
-        currentBeat = Mathf.FloorToInt(beatTime);
-        aroundBeatTime = (beatTime - currentBeat) - 0.5f;
+        currentBeatIndex = Mathf.FloorToInt(beatTime); 
+        if (currentBeatIndex >= beatList.Count) { LevelEnd(); return; }
+        currentBeat = beatList[currentBeatIndex];
+        aroundBeatTime = (beatTime - currentBeatIndex) - 0.5f;
 
-        if (currentBeat != previousBeat)
+        levelProgress = beatTime / beatList.Count;
+
+        if (currentBeatIndex != previousBeatIndex)
         {
             // Code to switch text, image, etc about beat
-            previousBeat = currentBeat;
+            previousBeatIndex = currentBeatIndex;
             canStartRecognition = true;
             canStopRecognition = true;
 
             // Update Visuals based on current Beat class
-            if (currentBeat < beatList.Count)
+            if (currentBeatIndex < beatList.Count)
             {
-                currentKanaTMP.text = beatList[currentBeat].text;
-                currentWordTMP.text = beatList[currentBeat].word;
+                currentKanaTMP.text = beatList[currentBeatIndex].text;
+                currentWordTMP.text = beatList[currentBeatIndex].word;
             }
             else
             {
-
                 currentKanaTMP.text = string.Empty;
                 currentWordTMP.text = string.Empty;
             }
@@ -180,37 +223,45 @@ public class Timeline : MonoBehaviour
         {
             canStartRecognition = false;
             duringKeyRecognition = true;
-            KeyUpdate();// Key update after turn on key recognition
+            CheckBeat(); // Check Beat after turn on key recognition (duringKeyRecognition must be true)
         }
 
         if (canStopRecognition && aroundBeatTime >= maxBeatError)
         {
             canStopRecognition = false;
-            KeyUpdate(); // Key update before turn off key recognition
+            CheckBeat(); // Check Beat before turn off key recognition (duringKeyRecognition must be true)
             duringKeyRecognition = false;
-            
+
+            scoredSuccessfully = false;
+
             // If keyupdate fails, then fail the beat
+            inputField.text = string.Empty;
         }
 
-        
-        // Update Timeline position over time
-        // assumes seconds = meters
         float TimelinePos = beatTime * BeatDistance;
-        //float TimelinePos = beatTime;
-        //float TimelinePos = beatTime / timelineSpeed;
         var pos = Vector3.right * (-TimelinePos);
         transform.position = pos;
 
         // Update progress bar
         var progressBarPos = progressBar.GetPosition(1);
 
-        var progress = beatTime / beatList.Count;
         var cam_left = GameManager.camWorldCorners[0].x;
         var cam_right = GameManager.camWorldCorners[2].x;
         
-        var progress_rel_x = (cam_right - cam_left) * progress;
+        var progress_rel_x = (cam_right - cam_left) * levelProgress;
         progressBarPos.x = progress_rel_x + cam_left;
         progressBar.SetPosition(1, progressBarPos);
+    }
+    
+    void LevelEnd()
+    {
+        GameManager.PauseGame(true);
 
+        // Save stats
+        // level ending transition
+        // maybe goto a level success or failure screen with stats
+        summaryScreen.gameObject.SetActive(true);
+        summaryScreen.Activate();
+        // switch to main menu with said conclusion screen
     }
 }

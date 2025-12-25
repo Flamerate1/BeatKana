@@ -27,6 +27,7 @@ public class KanaBackspace : MonoBehaviour
 
     private void ButtonClicked(Touch touch)
     {
+        if (GameManager.gamePaused) return;
         if (touch.screenPosition.x > buttonBL.x &&
             touch.screenPosition.y > buttonBL.y &&
             touch.screenPosition.x < buttonTR.x &&

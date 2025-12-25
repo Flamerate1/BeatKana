@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -25,7 +25,9 @@ public class GameManager : MonoBehaviour
     // Selected in main menu and grabbed by timeline in the playgame scene
     public static Level currentLevel;
     public static Level GetLevelThenNull() { Level level = currentLevel; currentLevel = null; return level; }
-    public static void SetLevel(Level level) { currentLevel = level; } 
+    public static void SetLevel(Level level) { currentLevel = level; }
+
+    public static PlayerSaveData playerSaveData; // Stores level progression, currencies, etc
 
     private void Awake()
     {
@@ -36,13 +38,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         SceneManager.activeSceneChanged += OnSceneChange;
-
-        
-
-        // Not fully decided functionality how this works
-        // When does the camera get updated and all other things reliant on the camera? 
-        //UpdateCameraPosition();
-        // GameManagerScript is put higher in priority, so maybe its update code is working well. 
     }
 
     private void OnSceneChange(Scene current, Scene next)
@@ -69,8 +64,6 @@ public class GameManager : MonoBehaviour
                 cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
                 break;
         }
-
-        Debug.Log("Scenes: " + currentName + ", " + next.name);
     }
 
     // Keeps the camera's position at the designated UI location set by TimelinePositionRectTransform
@@ -120,5 +113,20 @@ public class GameManager : MonoBehaviour
         if (doPause) { GameManager.gamePaused = true; Time.timeScale = 0.0f; }
         else { GameManager.gamePaused = false; Time.timeScale = 1.0f; }
         Debug.Log("Game paused?: " + doPause.ToString());
+    }
+
+    public void SaveGame()
+    {
+        // Grab playerSaveData from GameManager and put it into json to place into a save file. 
+    }
+
+    void LoadGame()
+    {
+        // Grab data from json and put it into GameManager's playerSaveData object. 
+        // Update saveVersion
+
+        playerSaveData = new PlayerSaveData(); 
+
+        // If no save data create default save file. 
     }
 }

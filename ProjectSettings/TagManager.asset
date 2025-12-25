@@ -10,6 +10,8 @@ TagManager:
   - CurrentKana
   - TimelineCameraPosition
   - ProgressBar
+  - SummaryScreen
+  - ScoreDisplay
   layers:
   - Default
   - TransparentFX
