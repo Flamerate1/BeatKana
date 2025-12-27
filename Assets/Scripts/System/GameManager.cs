@@ -7,8 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+
     public static GameManager instance;
     public static TMP_InputField inputField;
+
+    public bool isBeatTimeline = true;
 
     // Camera Positioning
     public static Camera cam;
@@ -48,6 +51,7 @@ public class GameManager : MonoBehaviour
         SaveGame(); // for testing save function
     }
 
+    // SceneManager.activeSceneChanged += OnSceneChange; // In Awake method
     private void OnSceneChange(Scene current, Scene next)
     {
         string currentName = current.name;
@@ -151,5 +155,10 @@ public class GameManager : MonoBehaviour
         playerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
 
         // If no save data create default save file. 
+    }
+
+    static void LoadLevelData()
+    {
+        Level[] AllLevels = Resources.LoadAll<Level>("ScriptableObjects/Levels/");
     }
 }

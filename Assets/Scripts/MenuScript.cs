@@ -59,7 +59,15 @@ public class MenuScript : MonoBehaviour
     {
         GameManager.SetLevel(level);
         // GoToScene
-        SceneManager.LoadScene("Scenes/PlayScene", LoadSceneMode.Single);
+        if (GameManager.instance.isBeatTimeline)
+        {
+            SceneManager.LoadScene("Scenes/PlayScene", LoadSceneMode.Single);
+        }
+        else
+        {
+            SceneManager.LoadScene("Scenes/AltPlayScene", LoadSceneMode.Single);
+        }
+            
     }
 
 }
