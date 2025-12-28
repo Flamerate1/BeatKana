@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65941b32865dc724484f024a6a5689b1, type: 3}
+  m_Name: "\u6388\u696D"
+  m_EditorClassIdentifier: Assembly-CSharp::BeatWord
+  text: "\u6388\u696D"
+  level: 19
+  pitch: 0
+  definition: lesson, class work
+  beatChars:
+  - {fileID: 11400000, guid: 5f943267ce7a9ba4a8ab0d4c284e7830, type: 2}
+  - {fileID: 11400000, guid: e8067e0af7de8e8408b36854d7fb5efe, type: 2}
+  - {fileID: 11400000, guid: 2cf0b89756d3e8845b7918769e8111b5, type: 2}

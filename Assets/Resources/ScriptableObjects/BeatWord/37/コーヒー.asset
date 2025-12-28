@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65941b32865dc724484f024a6a5689b1, type: 3}
+  m_Name: "\u30B3\u30FC\u30D2\u30FC"
+  m_EditorClassIdentifier: Assembly-CSharp::BeatWord
+  text: "\u30B3\u30FC\u30D2\u30FC"
+  level: 37
+  pitch: 0
+  definition: Coffee
+  beatChars:
+  - {fileID: 11400000, guid: 50db816e9ca16bf48ab0cf0d1c9ec753, type: 2}
+  - {fileID: 11400000, guid: 719ce7c3dcd870e49b8e640b33e075ab, type: 2}
+  - {fileID: 11400000, guid: e32aaf18d99f68c4c817f450bb8b6e8c, type: 2}
+  - {fileID: 11400000, guid: 719ce7c3dcd870e49b8e640b33e075ab, type: 2}

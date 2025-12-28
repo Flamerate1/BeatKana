@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.IO;
 using TMPro;
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-
+        
         SceneManager.activeSceneChanged += OnSceneChange;
 
         path = Path.Combine(Application.persistentDataPath, "save.json");
