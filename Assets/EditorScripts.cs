@@ -100,7 +100,7 @@ public class EditorScripts : Editor
     public static bool FindWordPitchRecord(List<Dictionary<string, object>> data, string text, string kana, out int index)
     {
         index = 0;
-        int shortest_length = int.MaxValue;
+        //int shortest_length = int.MaxValue;
 
         // Find word in first column. Keep looking until can't find anymore. Save length and index when shorter than shortest found. 
         int kana_index = 0;
