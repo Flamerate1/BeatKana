@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Timeline : MonoBehaviour
 {
+    #region Vars
+
     [SerializeField] Level levelObject; // Optional Level scriptable object. 
+    bool isGameOver = false;
     bool isLevelLoaded = false;
 
     [SerializeField] int BPM = 60;
@@ -46,13 +49,18 @@ public class Timeline : MonoBehaviour
     TMP_Text currentWordTMP;
     TMP_Text currentKanaTMP;
     TMP_Text scoreDisplay;
+    #endregion
 
+    #region Start(), LoadTimeline(), GenerateBeatListSequential() & MakeBeats()
     void Start()
     {
         progressBar = GameObject.FindWithTag("ProgressBar").GetComponent<LineRenderer>();
         inputField = GameManager.inputField;
+        inputField.text = string.Empty;
         currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
         currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
+        currentKanaTMP.text = string.Empty;
+        currentWordTMP.text = string.Empty;
         scoreDisplay = GameObject.FindWithTag("ScoreDisplay").GetComponent<TMP_Text>();
         summaryScreen = GameObject.FindWithTag("SummaryScreen").GetComponent<SummaryScreen>();
         summaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
@@ -66,7 +74,7 @@ public class Timeline : MonoBehaviour
         // Grab GameManager level if it has one
         if (GameManager.currentLevel != null)
         {
-            levelObject = GameManager.GetLevelThenNull();
+            levelObject = GameManager.GetLevel();
             Debug.Log("Grabbing GameManager's recorded level");
         }
         else
@@ -115,6 +123,7 @@ public class Timeline : MonoBehaviour
         // Make BeatObjects
         beatObjects = MakeBeats(beatList);
         isLevelLoaded = true;
+        GameManager.PauseGame(false);
     }
 
     // this method creates the beat class instances in a list in sequential order that they were created in the array
@@ -154,6 +163,9 @@ public class Timeline : MonoBehaviour
         return beatObjects;
     }
 
+    #endregion
+
+    #region Runtime: CheckBeat(), Update() & LevelEnd()
     public void CheckBeat()
     {
         // Guard clauses
@@ -186,8 +198,9 @@ public class Timeline : MonoBehaviour
 
     void Update()
     {
+        if (isGameOver) return;
         if (!isLevelLoaded) return;
-        if (GameManager.gamePaused) return; // don't update if game is paused
+        if (GameManager.gamePaused) { return; } // don't update if game is paused
 
         beatTime += Time.deltaTime / BPS;
         currentBeatIndex = Mathf.FloorToInt(beatTime); 
@@ -253,7 +266,8 @@ public class Timeline : MonoBehaviour
     
     void LevelEnd()
     {
-        GameManager.PauseGame(true);
+        isGameOver = true;
+        //GameManager.PauseGame(true);
 
         // Update stats, then save game
 
@@ -265,4 +279,16 @@ public class Timeline : MonoBehaviour
         summaryScreen.Activate();
         // switch to main menu with said conclusion screen
     }
+    #endregion
+
+    #region Helpers: PauseGame()
+
+    public void PauseGame() { PauseGame(!GameManager.gamePaused); }
+    public void PauseGame(bool doPause)
+    {
+        GameManager.PauseGame(doPause);
+        summaryScreen.Pause(doPause);
+    }
+
+    #endregion
 }

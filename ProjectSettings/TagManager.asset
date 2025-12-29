@@ -12,6 +12,7 @@ TagManager:
   - ProgressBar
   - SummaryScreen
   - ScoreDisplay
+  - PauseScreen
   layers:
   - Default
   - TransparentFX

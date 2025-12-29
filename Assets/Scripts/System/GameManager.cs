@@ -1,8 +1,6 @@
-using NUnit.Framework;
 using System;
 using System.IO;
 using TMPro;
-using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -30,7 +28,7 @@ public class GameManager : MonoBehaviour
     // Current Level Data
     // Selected in main menu and grabbed by timeline in the playgame scene
     public static Level currentLevel;
-    public static Level GetLevelThenNull() { Level level = currentLevel; currentLevel = null; return level; }
+    public static Level GetLevel() { Level level = currentLevel; return level; } // Was GetLevelThenNull to avoid next playthrough keeping the same level data.
     public static void SetLevel(Level level) { currentLevel = level; }
 
 
@@ -120,7 +118,6 @@ public class GameManager : MonoBehaviour
     }
 
     public static void PauseGame() { PauseGame(!GameManager.gamePaused); }
-
     public static void PauseGame(bool doPause)
     {
         if (doPause) { GameManager.gamePaused = true; Time.timeScale = 0.0f; }
