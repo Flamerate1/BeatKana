@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65941b32865dc724484f024a6a5689b1, type: 3}
+  m_Name: "\u52D5\u7269"
+  m_EditorClassIdentifier: Assembly-CSharp::BeatWord
+  text: "\u52D5\u7269"
+  level: 16
+  pitch: 2
+  definition: animal
+  beatChars:
+  - {fileID: 11400000, guid: 42823a29675e1c14f8f9a911921d0b0d, type: 2}
+  - {fileID: 11400000, guid: 2cf0b89756d3e8845b7918769e8111b5, type: 2}
+  - {fileID: 11400000, guid: 12305c27244ca2847aedb77982ad843f, type: 2}
+  - {fileID: 11400000, guid: 4bb46561a6911c5429e1ebee8051213c, type: 2}

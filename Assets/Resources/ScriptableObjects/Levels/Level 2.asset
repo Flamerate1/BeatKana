@@ -17,10 +17,10 @@ MonoBehaviour:
   BeatDistance: 1
   maxBeatError: 0.2
   beatElementsBank:
-  - {fileID: 11400000, guid: 3077b0e83ab7d6f479e4df2218705623, type: 2}
-  - {fileID: 11400000, guid: 3077b0e83ab7d6f479e4df2218705623, type: 2}
-  - {fileID: 11400000, guid: 3077b0e83ab7d6f479e4df2218705623, type: 2}
-  - {fileID: 11400000, guid: 3077b0e83ab7d6f479e4df2218705623, type: 2}
+  - {fileID: 11400000, guid: 8abc8486fe7ede141967d07ed94aeb74, type: 2}
+  - {fileID: 11400000, guid: 7e0aa9efc1b4c9949ba3b4d4aec84e4a, type: 2}
+  - {fileID: 11400000, guid: 4c4d1575d5a88d84891efd1c0d2a397c, type: 2}
+  - {fileID: 11400000, guid: 792b08f6501d3c948a60ba25e539996f, type: 2}
   levelPreBeats: 3
   betweenBeats: 1
   levelPostBeats: 2

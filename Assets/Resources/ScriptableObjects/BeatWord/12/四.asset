@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BeatWord
   text: "\u56DB"
   level: 12
-  pitch: 0
+  pitch: 3
   definition: Four
   beatChars:
   - {fileID: 11400000, guid: 0e7264977b6e711489c5e6d8b9cd324f, type: 2}

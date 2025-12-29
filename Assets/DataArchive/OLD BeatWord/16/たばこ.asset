@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65941b32865dc724484f024a6a5689b1, type: 3}
+  m_Name: "\u305F\u3070\u3053"
+  m_EditorClassIdentifier: Assembly-CSharp::BeatWord
+  text: "\u305F\u3070\u3053"
+  level: 16
+  pitch: 0
+  definition: tobacco,cigarettes
+  beatChars:
+  - {fileID: 11400000, guid: 0b1f033e90bffdf48ba9cfefc1047428, type: 2}
+  - {fileID: 11400000, guid: 6ca4f878a0aa5b14a85f61b6a5f6acc5, type: 2}
+  - {fileID: 11400000, guid: a65bed82a079a3e46ab29afaabb9b1a2, type: 2}

@@ -47,7 +47,6 @@ public class Timeline : MonoBehaviour
     TMP_Text currentKanaTMP;
     TMP_Text scoreDisplay;
 
-
     void Start()
     {
         progressBar = GameObject.FindWithTag("ProgressBar").GetComponent<LineRenderer>();
