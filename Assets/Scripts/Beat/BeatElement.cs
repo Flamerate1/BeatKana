@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -16,4 +17,6 @@ public abstract class BeatElement : ScriptableObject
     /* example
      * public override ElementType GetElementType() {  return ElementType.Char; }
      */
+
+    public abstract void ProcessToBeat(ref List<Beat> beatList);
 }

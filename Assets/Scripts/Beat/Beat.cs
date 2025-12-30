@@ -49,6 +49,8 @@ public class Beat
         }
     }
 
+    
+    /*
     // Method to turn a BeatElement scriptable object into a series of Beat class instances
     public static void ProcessElement(ref List<Beat> beatList, BeatElement element)
     {
@@ -56,35 +58,14 @@ public class Beat
         {
             case BeatElement.ElementType.Char:
                 BeatChar charElement = (BeatChar)element; // Cast to BeatChar
-                beatList.Add(new Beat(charElement.text, charElement.romaji, charElement.clip)); // Add character to beatlist 
+                ProcessElement(ref beatList, charElement);
+                //beatList.Add(new Beat(charElement.text, charElement.romaji, charElement.clip)); // Add character to beatlist 
 
                 break;
 
             case BeatElement.ElementType.Word:
                 BeatWord wordElement = (BeatWord)element; // Cast to BeatWord
-                int beatListStartIndex = beatList.Count; // Get the starting point. 
-                for (int i = 0; i < wordElement.beatChars.Length; i++) // Iterate through characters and add them to beatlist. 
-                {
-                    ProcessElement(ref beatList, wordElement.beatChars[i]); // Add each character to beatlist. Populate list
-                    beatList[beatListStartIndex + i].word = wordElement.text;
-                }
-
-                if (wordElement.pitch == 0) // heiban word
-                {
-                    beatList[beatListStartIndex].pitchIsHigh = false;
-                    for (int i = 1; i < wordElement.beatChars.Length; i++)
-                    {
-                        beatList[beatListStartIndex + i].pitchIsHigh = true;
-                    }
-                }
-                else // nakadaka or oodaka
-                {
-                    for (int i = 0; i < wordElement.beatChars.Length; i++)
-                    {
-                        bool isHigh = (i + 1) < wordElement.pitch; // Switches to low 
-                        beatList[beatListStartIndex + i].pitchIsHigh = isHigh;
-                    }
-                }
+                ProcessElement(ref beatList, wordElement);
 
                 break;
             case BeatElement.ElementType.Phrase: // NOTHING YET
@@ -93,4 +74,42 @@ public class Beat
                 break;
         }
     }
+
+    public static void ProcessElement(ref List<Beat> beatList, BeatChar element)
+    {
+
+        beatList.Add(new Beat(element.text, element.romaji, element.clip)); // Add character to beatlist 
+    }
+    public static void ProcessElement(ref List<Beat> beatList, BeatWord element)
+    {
+        //BeatWord wordElement = (BeatWord)element; // Cast to BeatWord
+        int beatListStartIndex = beatList.Count; // Get the starting point. 
+        for (int i = 0; i < element.beatChars.Length; i++) // Iterate through characters and add them to beatlist. 
+        {
+            ProcessElement(ref beatList, element.beatChars[i]); // Add each character to beatlist. Populate list
+            beatList[beatListStartIndex + i].word = element.text;
+        }
+
+        if (element.pitch == 0) // heiban word
+        {
+            beatList[beatListStartIndex].pitchIsHigh = false;
+            for (int i = 1; i < element.beatChars.Length; i++)
+            {
+                beatList[beatListStartIndex + i].pitchIsHigh = true;
+            }
+        }
+        else // nakadaka or oodaka
+        {
+            for (int i = 0; i < element.beatChars.Length; i++)
+            {
+                bool isHigh = (i + 1) < element.pitch; // Switches to low 
+                beatList[beatListStartIndex + i].pitchIsHigh = isHigh;
+            }
+        }
+    }
+    public static void ProcessElement(ref List<Beat> beatList, BeatPhrase element)
+    {
+        //
+    }
+    */
 }

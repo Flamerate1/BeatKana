@@ -157,6 +157,6 @@ public class GameManager : MonoBehaviour
 
     static void LoadLevelData()
     {
-        Level[] AllLevels = Resources.LoadAll<Level>("ScriptableObjects/Levels/");
+        Level[] allLevels = Resources.LoadAll<Level>("ScriptableObjects/Levels/");
     }
 }

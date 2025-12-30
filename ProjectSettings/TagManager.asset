@@ -13,6 +13,7 @@ TagManager:
   - SummaryScreen
   - ScoreDisplay
   - PauseScreen
+  - FeedbackGraphic
   layers:
   - Default
   - TransparentFX

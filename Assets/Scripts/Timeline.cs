@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static FeedbackGraphic;
 
 public class Timeline : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Timeline : MonoBehaviour
     int previousBeatIndex = 0; // Used to play code at every beat increment.
     float beatTime = 0f; // Accumulated actual time that has passed
     int currentBeatIndex = 0; // The current beat which is seconds / BPM
-    float aroundBeatTime = 0f; // time between now and the actual current beat point.
+    float aroundBeatApex = 0f; // time between now and the actual current beat point.
     bool canStartRecognition = false; // Enables single flip of duringKeyRecognition to true at start of input period. 
     bool canStopRecognition = false; // Enables single flip of duringKeyRecognition to false at end of input period.  
     bool duringKeyRecognition = false; // true during the moments when the player can input for the letter and score. 
@@ -49,6 +50,7 @@ public class Timeline : MonoBehaviour
     TMP_Text currentWordTMP;
     TMP_Text currentKanaTMP;
     TMP_Text scoreDisplay;
+    FeedbackGraphic feedbackGraphic;
     #endregion
 
     #region Start(), LoadTimeline(), GenerateBeatListSequential() & MakeBeats()
@@ -57,6 +59,7 @@ public class Timeline : MonoBehaviour
         progressBar = GameObject.FindWithTag("ProgressBar").GetComponent<LineRenderer>();
         inputField = GameManager.inputField;
         inputField.text = string.Empty;
+        inputField.onValueChanged.AddListener(CheckBeat);
         currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
         currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
         currentKanaTMP.text = string.Empty;
@@ -65,6 +68,8 @@ public class Timeline : MonoBehaviour
         summaryScreen = GameObject.FindWithTag("SummaryScreen").GetComponent<SummaryScreen>();
         summaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
         summaryScreen.gameObject.SetActive(false);
+        feedbackGraphic = GameObject.FindWithTag("FeedbackGraphic").GetComponent<FeedbackGraphic>();
+        feedbackGraphic.gameObject.SetActive(false);
 
         LoadTimeline();
     }
@@ -133,7 +138,8 @@ public class Timeline : MonoBehaviour
 
         for (int i = 0; i < beatElementsBank.Length; i++)
         {
-            Beat.ProcessElement(ref beatsList, beatElementsBank[i]);
+            //Beat.ProcessElement(ref beatsList, beatElementsBank[i]);
+            beatElementsBank[i].ProcessToBeat(ref beatsList);
             Beat.AddEmptyBeats(ref beatsList, betweenBeats);
         }
 
@@ -165,23 +171,40 @@ public class Timeline : MonoBehaviour
 
     #endregion
 
-    #region Runtime: CheckBeat(), Update() & LevelEnd()
-    public void CheckBeat()
+    #region Runtime: CheckBeat(), Update()
+    public void CheckBeat(string text) 
     {
-        // Guard clauses
-        if (GameManager.gamePaused || // Don't input if game is paused >:( CHEATER
-            !duringKeyRecognition || // Quit if can't score now.
-            scoredSuccessfully || // Don't search any longer if scored already. 
-            currentBeat.text == string.Empty // Don't search if currently an empty beat
-        ) return; 
+        if (GameManager.gamePaused || // stop input from pauses state
+            isGameOver 
+            ) 
+        {
+            inputField.text = string.Empty;
+            return;
+        }
 
-        string text = inputField.text;
+        // Punish player if inputted during wrong moments
+        if ((!duringKeyRecognition || // Quit if can't score now.
+            scoredSuccessfully || // Don't search any longer if scored already.
+            currentBeat.text == string.Empty) && // Don't search if currently an empty beat
+            text != string.Empty
+            )
+        {
+            // punish player code
+            totalPoints -= 20;
+            feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.WrongTime);
+
+            inputField.text = string.Empty;
+            return;
+        }
+
         
+
+        //string text = inputField.text;
         if (text.Contains(currentBeat.text)) // if text match
         {
             scoredSuccessfully = true;
             inputField.text = string.Empty;
-            float accuracy = 1f - (Mathf.Abs(aroundBeatTime) / maxBeatError); // Accuracy depending on distance to beat. 
+            float accuracy = 1f - (Mathf.Abs(aroundBeatApex) / maxBeatError); // Accuracy depending on distance to beat. 
             float round = Mathf.Floor(accuracy * 100f) / 100f; // reduce to 2 decimal places
             accuracy = Mathf.Clamp01(round); // Clamp between 0 and 1
 
@@ -193,6 +216,9 @@ public class Timeline : MonoBehaviour
 
             // Update ScoreDisplay
             scoreDisplay.text = "Score: " + totalPoints.ToString();
+
+            // Categorize Score
+            feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
         }
     }
 
@@ -202,11 +228,12 @@ public class Timeline : MonoBehaviour
         if (!isLevelLoaded) return;
         if (GameManager.gamePaused) { return; } // don't update if game is paused
 
-        beatTime += Time.deltaTime / BPS;
-        currentBeatIndex = Mathf.FloorToInt(beatTime); 
-        if (currentBeatIndex >= beatList.Count) { LevelEnd(); return; }
-        currentBeat = beatList[currentBeatIndex];
-        aroundBeatTime = (beatTime - currentBeatIndex) - 0.5f;
+        beatTime += Time.deltaTime / BPS; // Time counted as amount of beats (float, not discrete int)
+        currentBeatIndex = Mathf.FloorToInt(beatTime);  // time as discrete int
+        if (currentBeatIndex >= beatList.Count) { LevelEnd(); return; } // End level when beat index hits end of beatList count
+
+        currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
+        aroundBeatApex = (beatTime - currentBeatIndex) - 0.5f; // Amount of time between now and the apex of the current beat. 
 
         levelProgress = beatTime / beatList.Count;
 
@@ -230,22 +257,26 @@ public class Timeline : MonoBehaviour
             }
         }
 
-        if (canStartRecognition && aroundBeatTime >= -maxBeatError)
+        if (canStartRecognition && aroundBeatApex >= -maxBeatError)
         {
             canStartRecognition = false;
             duringKeyRecognition = true;
-            CheckBeat(); // Check Beat after turn on key recognition (duringKeyRecognition must be true)
+            //CheckBeat(); // Check Beat after turn on key recognition (duringKeyRecognition must be true)
         }
 
-        if (canStopRecognition && aroundBeatTime >= maxBeatError)
+        if (canStopRecognition && aroundBeatApex >= maxBeatError)
         {
+            if (currentBeat.text != string.Empty &&
+                !scoredSuccessfully)
+            {
+                feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
+            }
+
             canStopRecognition = false;
-            CheckBeat(); // Check Beat before turn off key recognition (duringKeyRecognition must be true)
             duringKeyRecognition = false;
 
             scoredSuccessfully = false;
 
-            // If keyupdate fails, then fail the beat
             inputField.text = string.Empty;
         }
 
@@ -263,7 +294,17 @@ public class Timeline : MonoBehaviour
         progressBarPos.x = progress_rel_x + cam_left;
         progressBar.SetPosition(1, progressBarPos);
     }
-    
+    #endregion
+
+    #region Other Helpers: PauseGame(), LevelEnd()
+
+    public void PauseGame() { PauseGame(!GameManager.gamePaused); }
+    public void PauseGame(bool doPause)
+    {
+        GameManager.PauseGame(doPause);
+        summaryScreen.Pause(doPause);
+    }
+
     void LevelEnd()
     {
         isGameOver = true;
@@ -272,22 +313,12 @@ public class Timeline : MonoBehaviour
         // Update stats, then save game
 
         GameManager.SaveGame();
-        
+
         // level ending transition
         // maybe goto a level success or failure screen with stats
         summaryScreen.gameObject.SetActive(true);
         summaryScreen.Activate();
         // switch to main menu with said conclusion screen
-    }
-    #endregion
-
-    #region Helpers: PauseGame()
-
-    public void PauseGame() { PauseGame(!GameManager.gamePaused); }
-    public void PauseGame(bool doPause)
-    {
-        GameManager.PauseGame(doPause);
-        summaryScreen.Pause(doPause);
     }
 
     #endregion
