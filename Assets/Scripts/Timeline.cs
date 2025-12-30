@@ -197,9 +197,7 @@ public class Timeline : MonoBehaviour
             return;
         }
 
-        
-
-        //string text = inputField.text;
+        // Correct Input
         if (text.Contains(currentBeat.text)) // if text match
         {
             scoredSuccessfully = true;
@@ -217,8 +215,13 @@ public class Timeline : MonoBehaviour
             // Update ScoreDisplay
             scoreDisplay.text = "Score: " + totalPoints.ToString();
 
-            // Categorize Score
+            // Categorize Score, then InitiateFeedback for graphic. 
             feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
+
+            // Play sound of hiragana at proper pitch. 
+            // currentBeat.clip
+            // currentBeat.pitchIsHigh
+
         }
     }
 
