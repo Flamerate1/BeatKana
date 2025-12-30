@@ -122,6 +122,10 @@ public class KanaButton : MonoBehaviour
     {
         kanaKeyboard = GetComponentInParent<KanaKeyboard>();
         rectTransform = GetComponent<RectTransform>();
+
+        // If the dakuten key, set the special keys in kanaKeyboard to the one's created in the inspector
+        if (key == "dakuten") 
+            kanaKeyboard.SetDakutenSpecialKeys(keys); 
     }
 
 

@@ -6,6 +6,9 @@ public class KanaKeyboard : MonoBehaviour
     TMP_InputField inputField;
     KanaButtonGuide kanaButtonGuide;
 
+    public void SetDakutenSpecialKeys(string[] keys) { this.dakutenSpecialKeys = keys; }
+    string[] dakutenSpecialKeys; 
+
     private void Start()
     {
         inputField = GameManager.inputField;
@@ -42,6 +45,7 @@ public class KanaKeyboard : MonoBehaviour
     }
     public void InputToField(string text)
     {
+
         inputField.text = inputField.text + text;
         InputFieldUpdated();
     }

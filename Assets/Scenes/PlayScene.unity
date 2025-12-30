@@ -9173,11 +9173,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KanaButton
   key: dakuten
   keys:
-  - big
-  - "\u309B"
-  - "\u5C0F"
-  - "\u309C"
-  - "\u5927"
+  - <dakuten_button>
+  - <dakuten>
+  - <tiisan>
+  - <handakuten>
+  - <ookii>
 --- !u!1 &1820204118
 GameObject:
   m_ObjectHideFlags: 0
@@ -9788,7 +9788,7 @@ GameObject:
   - component: {fileID: 2001121415}
   - component: {fileID: 2001121418}
   m_Layer: 5
-  m_Name: puncuation
+  m_Name: punctuation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10864,8 +10864,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 7931924328138606943}
-  - {fileID: 519420032}
   - {fileID: 298825956}
+  - {fileID: 519420032}
   - {fileID: 364773283}
   - {fileID: 416992355}
   - {fileID: 1100645227}
