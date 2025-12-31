@@ -5674,14 +5674,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   levelObject: {fileID: 0}
-  BPM: 60
-  BeatDistance: 2.5
+  BPM: 10
+  BeatDistance: 1.5
   maxBeatError: 0.2
   beatElementsBank:
-  - {fileID: 11400000, guid: b2cd7e0740a88184299a45f830a18c90, type: 2}
-  levelPreBeats: 2
-  betweenBeats: 1
-  levelPostBeats: 2
+  - {fileID: 11400000, guid: a1e76e1eed258c748afd87868a3ec38a, type: 2}
+  - {fileID: 11400000, guid: 7cf7f5c9cb7636c40ba8065d74e41362, type: 2}
+  - {fileID: 11400000, guid: 22ed60f7204f2844889f2600665f0bf2, type: 2}
+  - {fileID: 11400000, guid: 9cdb299cb409e61409fb80a9a6b717f9, type: 2}
+  - {fileID: 11400000, guid: 8deeedc5f860e4a49904ca8e4641be5a, type: 2}
+  - {fileID: 11400000, guid: 6268893507fa25740bb4a80d8879021a, type: 2}
+  levelPreBeats: 1
+  betweenBeats: 0
+  levelPostBeats: 1
 --- !u!1 &1143073535
 GameObject:
   m_ObjectHideFlags: 0
@@ -9173,11 +9178,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KanaButton
   key: dakuten
   keys:
-  - <dakuten_button>
+  - <switchButton>
   - <dakuten>
-  - <tiisan>
+  - <komoji>
   - <handakuten>
-  - <ookii>
+  - <nothing>
 --- !u!1 &1820204118
 GameObject:
   m_ObjectHideFlags: 0

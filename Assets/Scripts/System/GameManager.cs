@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         
         SceneManager.activeSceneChanged += OnSceneChange;
 
-        var _ = KanaData.Instance; // trigger init
+        //var _ = KanaData.Instance; // trigger init
 
         path = Path.Combine(Application.persistentDataPath, "save.json");
         LoadGame();
