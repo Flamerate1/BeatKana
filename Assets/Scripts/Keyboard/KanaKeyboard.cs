@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class KanaKeyboard : MonoBehaviour
 {
-    TMP_InputField inputField;
+    //TMP_InputField inputField;
+    InputString inputString;
     KanaButtonGuide kanaButtonGuide;
 
     public void SetDakutenSpecialKeys(string[] keys) { this.dakutenSpecialKeys = keys; }
@@ -11,7 +12,8 @@ public class KanaKeyboard : MonoBehaviour
 
     private void Start()
     {
-        inputField = GameManager.inputField;
+        //inputField = GameManager.inputField;
+        inputString = GameManager.inputString;
         kanaButtonGuide = gameObject.GetComponentInChildren<KanaButtonGuide>();
         KanaButtonGuideDeactivate();
     }
@@ -36,45 +38,77 @@ public class KanaKeyboard : MonoBehaviour
         // Empty and unused
     }
 
-    public void ResetInputField() { inputField.text = string.Empty; }
 
-    public string GetInputFieldText()
+    public void InputToField(string key, string text)
     {
-        Debug.Log(inputField.text);
-        return inputField.text;
+        if (key == "dakuten") 
+            text = DakutenProcess(text);
+
+        //inputField.text = inputField.text + text;
+        inputString.AddString(text);
+        InputFieldUpdated();
     }
-    public void InputToField(string text)
+
+    string DakutenProcess(string text)
     {
+        if (inputString.IsEmpty()) return "";
         string switchButton = this.dakutenSpecialKeys[0];
         string dakutenButton = this.dakutenSpecialKeys[1];
         string komojiButton = this.dakutenSpecialKeys[2];
         string handakutenButton = this.dakutenSpecialKeys[3];
         string nothingButton = this.dakutenSpecialKeys[4];
+        if (text == nothingButton) return "";
+
+
+        char lastChar = inputString.FinalChar();
+
         switch (text)
         {
             case var x when x == switchButton:
-                if (KanaData.SwitchKana(text.ToCharArray()[0], out char next)) { text = next.ToString(); }
+                Debug.Log("Special key: " + switchButton);
+                if (KanaData.SwitchKana(lastChar, out char next))
+                {
+                    inputString.RemoveFromEnd();
+                    return next.ToString();
+                }
                 break;
             case var x when x == dakutenButton:
-                if (KanaData.ToFromDakuten(text.ToCharArray()[0], out char dakuten)) { text = dakuten.ToString(); }
+                Debug.Log("Special key: " + dakutenButton);
+                if (KanaData.ToFromDakuten(lastChar, out char dakuten))
+                {
+                    inputString.RemoveFromEnd();
+                    return dakuten.ToString();
+                }
                 break;
             case var x when x == komojiButton:
-                if (KanaData.ToFromKomoji(text.ToCharArray()[0], out char komoji)) { text = komoji.ToString(); }
+                Debug.Log("Special key: " + komojiButton);
+                if (KanaData.ToFromKomoji(lastChar, out char komoji))
+                {
+                    inputString.RemoveFromEnd();
+                    return komoji.ToString();
+                }
                 break;
             case var x when x == handakutenButton:
-                if (KanaData.ToFromHandakuten(text.ToCharArray()[0], out char handakuten)) { text = handakuten.ToString(); }
+                Debug.Log("Special key: " + handakutenButton);
+                if (KanaData.ToFromHandakuten(lastChar, out char handakuten))
+                {
+                    inputString.RemoveFromEnd();
+                    return handakuten.ToString();
+                }
                 break;
-            case var x when x == nothingButton: text = ""; break;
         }
-        inputField.text = inputField.text + text;
-        InputFieldUpdated();
+
+        return lastChar.ToString();
     }
+
     public void BackspaceOnField()
     {
+        inputString.RemoveFromEnd();
+        /*
         if (inputField.text.Length > 0)
         {
             inputField.text = inputField.text.Remove(inputField.text.Length - 1);
             InputFieldUpdated();
-        }
+        }*/
     }
 }

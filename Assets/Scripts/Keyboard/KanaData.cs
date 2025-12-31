@@ -9,13 +9,13 @@ public class KanaData
     //public static KanaData Instance => _instance ??= new KanaData();
     private static KanaData _instance = new KanaData();
 
-    private static Dictionary<char, char> komojiData;
-    private static Dictionary<char, char> dakutenData;
-    private static Dictionary<char, char> handakutenData;
-    private static Dictionary<char, char> switchData;
+    private static Dictionary<char, char> komojiData = new Dictionary<char, char>();
+    private static Dictionary<char, char> dakutenData = new Dictionary<char, char>();
+    private static Dictionary<char, char> handakutenData = new Dictionary<char, char>();
+    private static Dictionary<char, char> switchData = new Dictionary<char, char>();
 
-
-    private static BiDictionary<char, char> katakanaSwitchData;
+    private static Dictionary<char, char> katakanaSwitchData = new Dictionary<char, char>();
+    //private static BiDictionary<char, char> katakanaSwitchData = new BiDictionary<char, char>();
 
     public static bool ToFromKomoji(char kana, out char opposite)
     {

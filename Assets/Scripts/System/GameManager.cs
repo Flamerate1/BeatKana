@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public static TMP_InputField inputField;
+    public static InputString inputString;
 
     public bool isBeatTimeline = true;
 
@@ -42,17 +43,16 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-        
+
         SceneManager.activeSceneChanged += OnSceneChange;
 
         //var _ = KanaData.Instance; // trigger init
 
         path = Path.Combine(Application.persistentDataPath, "save.json");
         LoadGame();
-        SaveGame(); // for testing save function
+        //SaveGame(); // for testing save function
     }
 
-    // SceneManager.activeSceneChanged += OnSceneChange; // In Awake method
     private void OnSceneChange(Scene current, Scene next)
     {
         string currentName = current.name;
@@ -66,9 +66,11 @@ public class GameManager : MonoBehaviour
         switch (next.name)
         {
             case "PlayScene":
+                Debug.Log("Scene is now PlayScene");
                 cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
                 cam_z = cam.transform.position.z;
-                inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
+                //inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
+                inputString = GameObject.FindWithTag("InputString").GetComponent<InputString>();
                 CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
                 TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
                 lastHeight = 0; lastWidth = 0;

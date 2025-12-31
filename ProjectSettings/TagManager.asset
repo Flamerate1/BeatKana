@@ -5,15 +5,14 @@ TagManager:
   serializedVersion: 3
   tags:
   - Canvas
-  - InputField
   - CurrentWord
   - CurrentKana
   - TimelineCameraPosition
   - ProgressBar
   - SummaryScreen
   - ScoreDisplay
-  - PauseScreen
   - FeedbackGraphic
+  - InputString
   layers:
   - Default
   - TransparentFX

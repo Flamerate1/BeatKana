@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 
 // Alias EnhancedTouch.Touch to "Touch" for less typing.
@@ -53,7 +53,12 @@ public class KanaButton : MonoBehaviour
             var y_diff = buttonTR.y - buttonBL.y;
             var pos = buttonCenter;
             pos.y += y_diff;
-
+            if (key == "dakuten")
+            {
+                string[] otherKeys = { "゛゜", "゛", "小", "゜", "" }; ;
+                kanaKeyboard.KanaButtonGuideActivate(buttonCenter, y_diff, otherKeys);
+                return;
+            }
             kanaKeyboard.KanaButtonGuideActivate(buttonCenter, y_diff, keys);
         }
     }
@@ -75,7 +80,7 @@ public class KanaButton : MonoBehaviour
             string pressed_key = keys[KeyDetect(initialTouchPosition, touch.screenPosition)];
 
             // Add this key to the TMP_InputField
-            kanaKeyboard.InputToField(pressed_key);
+            kanaKeyboard.InputToField(key, pressed_key);
 
             // Deactivate the KanaButtonGuide
             kanaKeyboard.KanaButtonGuideDeactivate();

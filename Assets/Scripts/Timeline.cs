@@ -47,6 +47,7 @@ public class Timeline : MonoBehaviour
     GameObject beatLine; // Visual guideline made at every beat position. 
     LineRenderer progressBar; // Bar that display how far through the level the player is. 
     TMP_InputField inputField;
+    InputString inputString;
     TMP_Text currentWordTMP;
     TMP_Text currentKanaTMP;
     TMP_Text scoreDisplay;
@@ -57,9 +58,9 @@ public class Timeline : MonoBehaviour
     void Start()
     {
         progressBar = GameObject.FindWithTag("ProgressBar").GetComponent<LineRenderer>();
-        inputField = GameManager.inputField;
-        inputField.text = string.Empty;
-        inputField.onValueChanged.AddListener(CheckBeat);
+        inputString = GameManager.inputString;
+        inputString.UpdateStringEvent += CheckBeat;
+        inputString.ResetString();
         currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
         currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
         currentKanaTMP.text = string.Empty;
@@ -174,11 +175,19 @@ public class Timeline : MonoBehaviour
     #region Runtime: CheckBeat(), Update()
     public void CheckBeat(string text) 
     {
+        if (text == string.Empty)
+        {
+            Debug.Log("Nothing in inputField");
+            return;
+        }
+
         if (GameManager.gamePaused || // stop input from pauses state
             isGameOver 
             ) 
         {
-            inputField.text = string.Empty;
+            //inputField.text = string.Empty;
+            inputString.ResetString();
+            Debug.Log("Can't input. Game is paused");
             return;
         }
 
@@ -188,12 +197,18 @@ public class Timeline : MonoBehaviour
             currentBeat.text == string.Empty) && // Don't search if currently an empty beat
             text != string.Empty
             )
-        {
+        { 
+            Debug.Log("Can't input. Wrong time!");
             // punish player code
             totalPoints -= 20;
+
+            // Update ScoreDisplay
+            scoreDisplay.text = "Score: " + totalPoints.ToString();
+
             feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.WrongTime);
 
-            inputField.text = string.Empty;
+            //inputField.text = string.Empty;
+            inputString.ResetString();
             return;
         }
 
@@ -201,7 +216,8 @@ public class Timeline : MonoBehaviour
         if (text.Contains(currentBeat.text)) // if text match
         {
             scoredSuccessfully = true;
-            inputField.text = string.Empty;
+            //inputField.text = string.Empty;
+            inputString.ResetString();
             float accuracy = 1f - (Mathf.Abs(aroundBeatApex) / maxBeatError); // Accuracy depending on distance to beat. 
             float round = Mathf.Floor(accuracy * 100f) / 100f; // reduce to 2 decimal places
             accuracy = Mathf.Clamp01(round); // Clamp between 0 and 1
@@ -280,7 +296,8 @@ public class Timeline : MonoBehaviour
 
             scoredSuccessfully = false;
 
-            inputField.text = string.Empty;
+            //inputField.text = string.Empty;
+            inputString.ResetString();
         }
 
         float TimelinePos = beatTime * BeatDistance;
