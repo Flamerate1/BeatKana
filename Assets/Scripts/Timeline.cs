@@ -45,6 +45,7 @@ public class Timeline : MonoBehaviour
 
     // Visual Section
     GameObject beatLine; // Visual guideline made at every beat position. 
+    GameObject beatLineBlack; // Visual guideline made at every beat position. 
     LineRenderer progressBar; // Bar that display how far through the level the player is. 
     TMP_InputField inputField;
     InputString inputString;
@@ -118,6 +119,7 @@ public class Timeline : MonoBehaviour
 
         // Load beatLine
         beatLine = Resources.Load<GameObject>("BeatLine");
+        beatLineBlack = Resources.Load<GameObject>("BeatLine BlackVariant");
 
         // Load TimelineBeat prefab, create beats list and generate TimelineBeats
         timelineBeatPrefab = Resources.Load<GameObject>("TimelineBeatPrefab");
@@ -157,12 +159,14 @@ public class Timeline : MonoBehaviour
         for (int i = 0; i < beatList.Count; i++)
         {
             Vector3 offset = Vector3.right * BeatDistance * 0.5f; // Offset by half a BeatDistance (places beat square in the center of the correct bounds)
-            Vector3 pos = Vector3.right * BeatDistance * i + offset;
+            Vector3 pos1 = Vector3.right * BeatDistance * i + offset;
+            Vector3 pos2 = Vector3.right * BeatDistance * i;
             
-            Instantiate(beatLine, pos, Quaternion.identity, transform); // Create beatLine guide objects
+            Instantiate(beatLine, pos1, Quaternion.identity, transform); // Create beatLine guide objects
+            Instantiate(beatLineBlack, pos2, Quaternion.identity, transform); // Create beatLine guide objects
 
             if (beatList[i].text == string.Empty) continue; // skip if empty string beat class
-            GameObject gameObject = Instantiate(timelineBeatPrefab, pos, Quaternion.identity, transform); // Create the object
+            GameObject gameObject = Instantiate(timelineBeatPrefab, pos1, Quaternion.identity, transform); // Create the object
             beatObjects[i] = gameObject.GetComponent<TimelineBeat>(); // Grab the component
             beatObjects[i].SetBeat(beatList[i]); 
         }
