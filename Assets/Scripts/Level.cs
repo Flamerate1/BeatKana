@@ -1,8 +1,41 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Level", menuName = "Scriptable Objects/Level")]
 public class Level : ScriptableObject
 {
+    [Serializable]
+    public struct DifficultyFields
+    {
+        public int BPM;
+        public float BeatDistance;
+        public float maxBeatError;
+        public bool showKana;
+        public DifficultyFields(int BPM, float BeatDistance, float maxBeatError, bool showKana)
+        {
+             this.BPM = BPM;
+             this.BeatDistance = BeatDistance;
+             this.maxBeatError =maxBeatError;
+             this.showKana = showKana;
+        }
+    }
+    [Serializable]
+    public struct BeatCounts
+    {
+        public int levelPreBeats;
+        public int betweenBeats;
+        public int levelPostBeats;
+        public BeatCounts(int levelPreBeats, int betweenBeats, int levelPostBeats)
+        {
+            this.levelPreBeats = levelPreBeats;
+            this.betweenBeats = betweenBeats;
+            this.levelPostBeats = levelPostBeats;
+        }
+    }
+
+    public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true);
+    
+
     // Name used to assist in saved data referencing
     // Used as an ID to make sure that where ever a level is being loaded (the button, the level, etc), it can also use the proper saved data there. 
     public string LevelName = string.Empty; 
@@ -10,6 +43,8 @@ public class Level : ScriptableObject
     public float BeatDistance = 1.0f;
     public float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
     public BeatElement[] beatElementsBank; // Assume in order for now. 
+
+    public BeatCounts beatCounts = new BeatCounts(3, 1, 2);
 
     public int levelPreBeats = 3;
     public int betweenBeats = 1;

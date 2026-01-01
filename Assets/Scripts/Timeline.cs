@@ -11,14 +11,14 @@ public class Timeline : MonoBehaviour
     bool isGameOver = false;
     bool isLevelLoaded = false;
 
-    [SerializeField] int BPM = 60;
-    [SerializeField] float BeatDistance = 1.0f;
-    [SerializeField] float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
-    [SerializeField] BeatElement[] beatElementsBank; // Assume in order for now. 
+    int BPM = 60;
+    float BeatDistance = 1.0f;
+    float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
+    BeatElement[] beatElementsBank; // Assume in order for now. 
 
-    [SerializeField] int levelPreBeats = 3;
-    [SerializeField] int betweenBeats = 1;
-    [SerializeField] int levelPostBeats = 2;
+    int levelPreBeats = 3;
+    int betweenBeats = 1;
+    int levelPostBeats = 2;
 
 
     float BPS; // Calculate from BPM / 60 seconds per minute;
@@ -91,24 +91,16 @@ public class Timeline : MonoBehaviour
 
         // Inititialize level data. 
 
-        if (levelObject != null)
-        {
-            Debug.Log("using either inspector stored or GameManager");
-            levelObject.GetLevelData(
-                ref BPM,
-                ref BeatDistance,
-                ref maxBeatError,
-                ref beatElementsBank,
+        levelObject.GetLevelData(
+            ref BPM,
+            ref BeatDistance,
+            ref maxBeatError,
+            ref beatElementsBank,
 
-                ref levelPreBeats,
-                ref betweenBeats,
-                ref levelPostBeats
-            );
-        }
-        else
-        {
-            Debug.Log("Using default inspector values");
-        }
+            ref levelPreBeats,
+            ref betweenBeats,
+            ref levelPostBeats
+        );
 
 
         // BPM based on level data
