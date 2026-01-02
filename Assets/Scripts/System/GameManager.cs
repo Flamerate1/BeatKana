@@ -8,8 +8,6 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance;
-    public static TMP_InputField inputField;
-    public static InputString inputString;
 
     public bool isBeatTimeline = true;
 
@@ -21,6 +19,11 @@ public class GameManager : MonoBehaviour
     public static float cam_z;
     public static Vector3[] camWorldCorners;
 
+    // 
+
+
+    //public static TMP_InputField inputField;
+    public static InputString inputString;
     public static RectTransform CanvasRectTransform;
     static RectTransform TimelinePositionRectTransform;
 
@@ -79,6 +82,17 @@ public class GameManager : MonoBehaviour
                 cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
                 break;
         }
+    }
+    public static void InitializePlayScene()
+    {
+        Debug.Log("Scene is now PlayScene");
+        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        cam_z = cam.transform.position.z;
+        //inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
+        inputString = GameObject.FindWithTag("InputString").GetComponent<InputString>();
+        CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
+        TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
+        lastHeight = 0; lastWidth = 0;
     }
 
     // Keeps the camera's position at the designated UI location set by TimelinePositionRectTransform

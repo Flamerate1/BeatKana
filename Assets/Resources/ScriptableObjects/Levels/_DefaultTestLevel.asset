@@ -10,17 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f057d122c9bd12449f745c491ac0d42, type: 3}
-  m_Name: Level 1
+  m_Name: _DefaultTestLevel
   m_EditorClassIdentifier: Assembly-CSharp::Level
+  LevelName: TESTING
   difficulty:
     BPM: 20
     BeatDistance: 3
     maxBeatError: 0.2
     showKana: 1
-  LevelName: Level 1
-  BPM: 20
-  BeatDistance: 3
-  maxBeatError: 0.2
   beatElementsBank:
   - {fileID: 11400000, guid: 9a43bc88e9e47ff4c990d4338fef34d4, type: 2}
   - {fileID: 11400000, guid: 11d183ca950baa341af28ece52ac50ee, type: 2}
@@ -29,6 +26,3 @@ MonoBehaviour:
     levelPreBeats: 3
     betweenBeats: 1
     levelPostBeats: 2
-  levelPreBeats: 1
-  betweenBeats: 1
-  levelPostBeats: 1

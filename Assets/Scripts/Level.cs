@@ -33,22 +33,15 @@ public class Level : ScriptableObject
         }
     }
 
-    public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true);
-    
+
 
     // Name used to assist in saved data referencing
     // Used as an ID to make sure that where ever a level is being loaded (the button, the level, etc), it can also use the proper saved data there. 
-    public string LevelName = string.Empty; 
-    public int BPM = 60;
-    public float BeatDistance = 1.0f;
-    public float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
+    public string LevelName = string.Empty;
+    public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true);
     public BeatElement[] beatElementsBank; // Assume in order for now. 
-
     public BeatCounts beatCounts = new BeatCounts(3, 1, 2);
 
-    public int levelPreBeats = 3;
-    public int betweenBeats = 1;
-    public int levelPostBeats = 2;
 
     // method WITHOUT Level Name
     public void GetLevelData(
@@ -62,14 +55,15 @@ public class Level : ScriptableObject
         ref int levelPostBeats
         )
     {
-        BPM = this.BPM;
-        BeatDistance = this.BeatDistance;
-        maxBeatError = this.maxBeatError;
+        BPM = this.difficulty.BPM;
+        BeatDistance = this.difficulty.BeatDistance;
+        maxBeatError = this.difficulty.maxBeatError;
+
         beatElementsBank = this.beatElementsBank;
 
-        levelPreBeats = this.levelPreBeats;
-        betweenBeats = this.betweenBeats;
-        levelPostBeats = this.levelPostBeats;
+        levelPreBeats = this.beatCounts.levelPreBeats;
+        betweenBeats = this.beatCounts.betweenBeats;
+        levelPostBeats = this.beatCounts.levelPostBeats;
     }
 
     // method WITH Level Name
