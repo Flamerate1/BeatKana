@@ -33,11 +33,15 @@ public class Level : ScriptableObject
         }
     }
 
+    [Serializable]
+    public enum LevelType { Beat, Queue }
+
 
 
     // Name used to assist in saved data referencing
     // Used as an ID to make sure that where ever a level is being loaded (the button, the level, etc), it can also use the proper saved data there. 
     public string LevelName = string.Empty;
+    public LevelType levelType = LevelType.Beat;
     public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true);
     public BeatElement[] beatElementsBank; // Assume in order for now. 
     public BeatCounts beatCounts = new BeatCounts(3, 1, 2);

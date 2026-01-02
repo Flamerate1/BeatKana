@@ -23,6 +23,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 11d183ca950baa341af28ece52ac50ee, type: 2}
   - {fileID: 11400000, guid: 36067f02e9b76b246a1a7ad577c9dd28, type: 2}
   beatCounts:
-    levelPreBeats: 3
+    levelPreBeats: 1
     betweenBeats: 1
-    levelPostBeats: 2
+    levelPostBeats: 1

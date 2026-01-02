@@ -109,11 +109,5 @@ public class KanaKeyboard : MonoBehaviour
     public void BackspaceOnField()
     {
         InputString.RemoveFromEnd();
-        /*
-        if (inputField.text.Length > 0)
-        {
-            inputField.text = inputField.text.Remove(inputField.text.Length - 1);
-            InputFieldUpdated();
-        }*/
     }
 }

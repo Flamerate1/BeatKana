@@ -95,15 +95,7 @@ public class MainMenuManager : MonoBehaviour
     public void GoToLevelButton(Level level)
     {
         GameManager.SetLevel(level);
-        // GoToScene
-        if (GameManager.instance.isBeatTimeline)
-        {
-            SceneManager.LoadScene("Scenes/PlayScene", LoadSceneMode.Single);
-        }
-        else
-        {
-            SceneManager.LoadScene("Scenes/AltPlayScene", LoadSceneMode.Single);
-        }
+        SceneManager.LoadScene("Scenes/PlayScene", LoadSceneMode.Single);
             
     }
 

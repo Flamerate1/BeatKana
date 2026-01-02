@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
-    public bool isBeatTimeline = true;
-
     // Camera Positioning
     public static Camera cam;
     public static event Action OnResolutionChanged;
@@ -47,41 +45,9 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        //SceneManager.activeSceneChanged += OnSceneChange;
-
-        //var _ = KanaData.Instance; // trigger init
-
         path = Path.Combine(Application.persistentDataPath, "save.json");
         LoadGame();
         //SaveGame(); // for testing save function
-    }
-
-    private void OnSceneChange(Scene current, Scene next)
-    {
-        string currentName = current.name;
-
-        if (currentName == null)
-        {
-            // Scene1 has been removed
-            currentName = "Replaced";
-        }
-
-        switch (next.name)
-        {
-            case "PlayScene":
-                Debug.Log("Scene is now PlayScene");
-                cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-                cam_z = cam.transform.position.z;
-                //inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
-                inputString = GameObject.FindWithTag("InputString").GetComponent<InputString>();
-                CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
-                TimelineCameraPosition = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
-                lastHeight = 0; lastWidth = 0;
-                break;
-            case "MainMenu":
-                cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-                break;
-        }
     }
 
     public static void PlayManagerSetFields(PlayManager.GMFields gmFields)
@@ -93,12 +59,7 @@ public class GameManager : MonoBehaviour
     public static void InitializePlayScene()
     {
         Debug.Log("Scene is now PlayScene");
-        //cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         cam_z = cam.transform.position.z;
-        //inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
-        //inputString = GameObject.FindWithTag("InputString").GetComponent<InputString>();
-        //CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
-        //TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
         lastHeight = 0; lastWidth = 0;
     }
 

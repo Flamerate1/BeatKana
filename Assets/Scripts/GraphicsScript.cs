@@ -14,13 +14,6 @@ public class GraphicsScript : MonoBehaviour
 
     void UpdateGraphics()
     {
-        /*
-        Vector3[] fourCorners = new Vector3[4];
-        GameManager.CanvasRectTransform.GetWorldCorners(fourCorners);
-        fourCorners[0] = GameManager.cam.ScreenToWorldPoint(fourCorners[0]);
-        fourCorners[2] = GameManager.cam.ScreenToWorldPoint(fourCorners[2]);
-        var x1 = fourCorners[0].x;
-        var x2 = fourCorners[2].x;*/
         var x1 = GameManager.camWorldCorners[0].x;
         var x2 = GameManager.camWorldCorners[2].x;
 
