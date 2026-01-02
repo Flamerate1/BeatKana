@@ -2242,7 +2242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b24418b6287459ba4ebf4e0d4b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  levelType: 0
+  levelType: 1
   gmFields:
     Camera: {fileID: 519420031}
     canvasRectTransform: {fileID: 364773283}
@@ -2256,8 +2256,8 @@ MonoBehaviour:
     currentWordTMP: {fileID: 497287633}
     currentKanaTMP: {fileID: 1820204120}
     scoreDisplay: {fileID: 1253803047}
-  Timeline: {fileID: 1100645228}
-  QueueTimeline: {fileID: 0}
+  BeatTimeline: {fileID: 1100645228}
+  QueueTimeline: {fileID: 1197264365}
   KanaKeyboard: {fileID: 1240827987}
 --- !u!4 &404005407
 Transform:
@@ -5459,7 +5459,7 @@ GameObject:
   - component: {fileID: 1100645227}
   - component: {fileID: 1100645228}
   m_Layer: 0
-  m_Name: Timeline
+  m_Name: BeatTimeline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5644,7 +5644,7 @@ GameObject:
   - component: {fileID: 1197264366}
   - component: {fileID: 1197264365}
   m_Layer: 0
-  m_Name: TimelineQueue
+  m_Name: QueueTimeline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5672,7 +5672,7 @@ Transform:
   m_GameObject: {fileID: 1197264364}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.87846, y: 0.12816, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
