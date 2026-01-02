@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuScript : MonoBehaviour
+public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] Vector3 mainMenuButtonPos = new Vector3(-250f, -125f);
     [SerializeField] Vector3 backMenuButtonPos = new Vector3(250f, -125f);
+
+    [SerializeField] Camera Camera;
 
     public enum Menu 
     { 
@@ -16,6 +18,10 @@ public class MenuScript : MonoBehaviour
     GameObject[] menus;
     Menu currentMenu;
     Menu previousMenu;
+    private void Awake()
+    {
+        GameManager.cam = Camera;
+    }
 
     private void Start()
     {

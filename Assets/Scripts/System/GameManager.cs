@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     //public static TMP_InputField inputField;
     public static InputString inputString;
     public static RectTransform CanvasRectTransform;
-    static RectTransform TimelinePositionRectTransform;
+    static RectTransform TimelineCameraPosition;
 
     public static bool gamePaused = false;
 
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        SceneManager.activeSceneChanged += OnSceneChange;
+        //SceneManager.activeSceneChanged += OnSceneChange;
 
         //var _ = KanaData.Instance; // trigger init
 
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
                 //inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
                 inputString = GameObject.FindWithTag("InputString").GetComponent<InputString>();
                 CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
-                TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
+                TimelineCameraPosition = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
                 lastHeight = 0; lastWidth = 0;
                 break;
             case "MainMenu":
@@ -83,15 +83,22 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    public static void PlayManagerSetFields(PlayManager.GMFields gmFields)
+    {
+        GameManager.cam = gmFields.Camera;
+        GameManager.CanvasRectTransform = gmFields.canvasRectTransform;
+        GameManager.TimelineCameraPosition = gmFields.timelineCameraPosition;
+    }
     public static void InitializePlayScene()
     {
         Debug.Log("Scene is now PlayScene");
-        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        //cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         cam_z = cam.transform.position.z;
         //inputField = GameObject.FindWithTag("InputField").GetComponent<TMP_InputField>();
-        inputString = GameObject.FindWithTag("InputString").GetComponent<InputString>();
-        CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
-        TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
+        //inputString = GameObject.FindWithTag("InputString").GetComponent<InputString>();
+        //CanvasRectTransform = GameObject.FindWithTag("Canvas").GetComponent<RectTransform>();
+        //TimelinePositionRectTransform = GameObject.FindWithTag("TimelineCameraPosition").GetComponent<RectTransform>();
         lastHeight = 0; lastWidth = 0;
     }
 
@@ -104,9 +111,9 @@ public class GameManager : MonoBehaviour
         // Get world position of canvas center
         CanvasRectTransform.GetPositionAndRotation(out Vector3 pos1, out Quaternion quat1);
         pos1 = cam.ScreenToWorldPoint(pos1);
-        
+
         // Get world position of timeline position within the canvas
-        TimelinePositionRectTransform.GetPositionAndRotation(out Vector3 pos2, out Quaternion quat2);
+        TimelineCameraPosition.GetPositionAndRotation(out Vector3 pos2, out Quaternion quat2);
         pos2 = cam.ScreenToWorldPoint(pos2);
 
         // Get relative world position

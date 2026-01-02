@@ -4,13 +4,13 @@ using UnityEngine.UI;
 public class MenuGoToScript : MonoBehaviour
 {
     Button button; 
-    MenuScript menuScript;
-    [SerializeField] MenuScript.Menu menu;
+    MainMenuManager menuScript;
+    [SerializeField] MainMenuManager.Menu menu;
 
     void Start()
     {
         button = GetComponent<Button>();
-        menuScript = GetComponentInParent<MenuScript>();
+        menuScript = GetComponentInParent<MainMenuManager>();
         button.onClick.AddListener(() => menuScript.GoToMenuButton(menu));
     }
 }

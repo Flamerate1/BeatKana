@@ -2251,6 +2251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   mainMenuButtonPos: {x: -250, y: -125, z: 0}
   backMenuButtonPos: {x: 250, y: -125, z: 0}
+  Camera: {fileID: 947470328}
 --- !u!1 &740215439
 GameObject:
   m_ObjectHideFlags: 0

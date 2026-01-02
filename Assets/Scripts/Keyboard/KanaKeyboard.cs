@@ -4,31 +4,36 @@ using UnityEngine;
 public class KanaKeyboard : MonoBehaviour
 {
     //TMP_InputField inputField;
-    InputString inputString;
-    KanaButtonGuide kanaButtonGuide;
+    InputString InputString;
+    KanaButtonGuide KanaButtonGuide;
 
     public void SetDakutenSpecialKeys(string[] keys) { this.dakutenSpecialKeys = keys; }
-    string[] dakutenSpecialKeys = new string[5]; 
+    string[] dakutenSpecialKeys = new string[5];
 
-    private void Start()
+    public void PlayManagerSetFields(PlayManager.TLFields tlFields)
+    { 
+        this.InputString = tlFields.InputString;
+    }
+    public void Initialize()
     {
         //inputField = GameManager.inputField;
-        inputString = GameManager.inputString;
-        kanaButtonGuide = gameObject.GetComponentInChildren<KanaButtonGuide>();
+        //InputString = GameManager.InputString;
+        KanaButtonGuide = gameObject.GetComponentInChildren<KanaButtonGuide>();
+        KanaButtonGuide.Initialize();
         KanaButtonGuideDeactivate();
     }
 
 
     public void KanaButtonGuideActivate(Vector3 pos, float y_diff, string[] keys) 
     {
-        kanaButtonGuide.gameObject.SetActive(true); 
-        kanaButtonGuide.SetActivate(pos, y_diff, keys);
-        kanaButtonGuide.prevIndex = -1; // to ensure that a change in string index always initially occurs
+        KanaButtonGuide.gameObject.SetActive(true); 
+        KanaButtonGuide.SetActivate(pos, y_diff, keys);
+        KanaButtonGuide.prevIndex = -1; // to ensure that a change in string index always initially occurs
     }
-    public void KanaButtonGuideSetIndex(int index) { kanaButtonGuide.SetIndex(index); }
+    public void KanaButtonGuideSetIndex(int index) { KanaButtonGuide.SetIndex(index); }
     public void KanaButtonGuideDeactivate()
     {
-        kanaButtonGuide.gameObject.SetActive(false);
+        KanaButtonGuide.gameObject.SetActive(false);
     }
 
 
@@ -45,13 +50,13 @@ public class KanaKeyboard : MonoBehaviour
             text = DakutenProcess(text);
 
         //inputField.text = inputField.text + text;
-        inputString.AddString(text);
+        InputString.AddString(text);
         InputFieldUpdated();
     }
 
     string DakutenProcess(string text)
     {
-        if (inputString.IsEmpty()) return "";
+        if (InputString.IsEmpty()) return "";
         string switchButton = this.dakutenSpecialKeys[0];
         string dakutenButton = this.dakutenSpecialKeys[1];
         string komojiButton = this.dakutenSpecialKeys[2];
@@ -60,7 +65,7 @@ public class KanaKeyboard : MonoBehaviour
         if (text == nothingButton) return "";
 
 
-        char lastChar = inputString.FinalChar();
+        char lastChar = InputString.FinalChar();
 
         switch (text)
         {
@@ -68,7 +73,7 @@ public class KanaKeyboard : MonoBehaviour
                 Debug.Log("Special key: " + switchButton);
                 if (KanaData.SwitchKana(lastChar, out char next))
                 {
-                    inputString.RemoveFromEnd();
+                    InputString.RemoveFromEnd();
                     return next.ToString();
                 }
                 break;
@@ -76,7 +81,7 @@ public class KanaKeyboard : MonoBehaviour
                 Debug.Log("Special key: " + dakutenButton);
                 if (KanaData.ToFromDakuten(lastChar, out char dakuten))
                 {
-                    inputString.RemoveFromEnd();
+                    InputString.RemoveFromEnd();
                     return dakuten.ToString();
                 }
                 break;
@@ -84,7 +89,7 @@ public class KanaKeyboard : MonoBehaviour
                 Debug.Log("Special key: " + komojiButton);
                 if (KanaData.ToFromKomoji(lastChar, out char komoji))
                 {
-                    inputString.RemoveFromEnd();
+                    InputString.RemoveFromEnd();
                     return komoji.ToString();
                 }
                 break;
@@ -92,7 +97,7 @@ public class KanaKeyboard : MonoBehaviour
                 Debug.Log("Special key: " + handakutenButton);
                 if (KanaData.ToFromHandakuten(lastChar, out char handakuten))
                 {
-                    inputString.RemoveFromEnd();
+                    InputString.RemoveFromEnd();
                     return handakuten.ToString();
                 }
                 break;
@@ -103,7 +108,7 @@ public class KanaKeyboard : MonoBehaviour
 
     public void BackspaceOnField()
     {
-        inputString.RemoveFromEnd();
+        InputString.RemoveFromEnd();
         /*
         if (inputField.text.Length > 0)
         {

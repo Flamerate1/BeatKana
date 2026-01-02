@@ -10,8 +10,8 @@ public class LevelButton : MonoBehaviour
 
     void Start()
     {
-        MenuScript menuScript = GetComponentInParent<MenuScript>();
+        MainMenuManager MainMenuManager = GetComponentInParent<MainMenuManager>();
         button = GetComponent<Button>();
-        button.onClick.AddListener(() => menuScript.GoToLevelButton(level));
+        button.onClick.AddListener(() => MainMenuManager.GoToLevelButton(level));
     }
 }

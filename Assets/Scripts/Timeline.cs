@@ -35,7 +35,7 @@ public class Timeline : MonoBehaviour
     // Performance stats
     bool scoredSuccessfully = false; // resets during each input period. 
     int totalPoints = 0; // Accumulated points
-    SummaryScreen summaryScreen;
+    SummaryScreen SummaryScreen;
 
     // Beat Processing and note keeping
     Beat currentBeat; // Reference to the current Beat class instance
@@ -47,31 +47,61 @@ public class Timeline : MonoBehaviour
     GameObject beatLine; // Visual guideline made at every beat position. 
     GameObject beatLineBlack; // Visual guideline made at every beat position. 
     LineRenderer progressBar; // Bar that display how far through the level the player is. 
-    TMP_InputField inputField;
-    InputString inputString;
+    //TMP_InputField inputField;
+    InputString InputString;
     TMP_Text currentWordTMP;
     TMP_Text currentKanaTMP;
     TMP_Text scoreDisplay;
-    FeedbackGraphic feedbackGraphic;
+    FeedbackGraphic FeedbackGraphic;
     #endregion
 
     #region Start(), LoadTimeline(), GenerateBeatListSequential() & MakeBeats()
-    void Start()
+    void DONTStart() // DEPRECATED
     {
         progressBar = GameObject.FindWithTag("ProgressBar").GetComponent<LineRenderer>();
-        inputString = GameManager.inputString;
-        inputString.UpdateStringEvent += CheckBeat;
-        inputString.ResetString();
+        InputString = GameManager.inputString;
+        InputString.UpdateStringEvent += CheckBeat;
+        InputString.ResetString();
         currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
         currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
         currentKanaTMP.text = string.Empty;
         currentWordTMP.text = string.Empty;
         scoreDisplay = GameObject.FindWithTag("ScoreDisplay").GetComponent<TMP_Text>();
-        summaryScreen = GameObject.FindWithTag("SummaryScreen").GetComponent<SummaryScreen>();
-        summaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
-        summaryScreen.gameObject.SetActive(false);
-        feedbackGraphic = GameObject.FindWithTag("FeedbackGraphic").GetComponent<FeedbackGraphic>();
-        feedbackGraphic.gameObject.SetActive(false);
+        SummaryScreen = GameObject.FindWithTag("SummaryScreen").GetComponent<SummaryScreen>();
+        SummaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
+        SummaryScreen.gameObject.SetActive(false);
+        FeedbackGraphic = GameObject.FindWithTag("FeedbackGraphic").GetComponent<FeedbackGraphic>();
+        FeedbackGraphic.gameObject.SetActive(false);
+
+        LoadTimeline();
+    }
+    public void PlayManagerSetFields(PlayManager.TLFields tlFields)
+    {
+        this.progressBar = tlFields.progressBar;
+        this.InputString = tlFields.InputString;
+        this.SummaryScreen = tlFields.SummaryScreen;
+        this.FeedbackGraphic = tlFields.FeedbackGraphic;
+        this.currentWordTMP = tlFields.currentWordTMP;
+        this.currentKanaTMP = tlFields.currentKanaTMP;
+        this.scoreDisplay = tlFields.scoreDisplay;
+    }
+    public void StartGame()
+    {
+        //progressBar = GameObject.FindWithTag("ProgressBar").GetComponent<LineRenderer>();
+        //InputString = GameManager.inputString;
+        InputString.Initialize();
+        InputString.UpdateStringEvent += CheckBeat;
+        InputString.ResetString();
+        //currentWordTMP = GameObject.FindWithTag("CurrentWord").GetComponent<TMP_Text>();
+        //currentKanaTMP = GameObject.FindWithTag("CurrentKana").GetComponent<TMP_Text>();
+        currentKanaTMP.text = string.Empty;
+        currentWordTMP.text = string.Empty;
+        //scoreDisplay = GameObject.FindWithTag("ScoreDisplay").GetComponent<TMP_Text>();
+        //SummaryScreen = GameObject.FindWithTag("SummaryScreen").GetComponent<SummaryScreen>();
+        SummaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
+        SummaryScreen.gameObject.SetActive(false);
+        //FeedbackGraphic = GameObject.FindWithTag("FeedbackGraphic").GetComponent<FeedbackGraphic>();
+        FeedbackGraphic.gameObject.SetActive(false);
 
         LoadTimeline();
     }
@@ -182,7 +212,7 @@ public class Timeline : MonoBehaviour
             ) 
         {
             //inputField.text = string.Empty;
-            inputString.ResetString();
+            InputString.ResetString();
             Debug.Log("Can't input. Game is paused");
             return;
         }
@@ -201,10 +231,10 @@ public class Timeline : MonoBehaviour
             // Update ScoreDisplay
             scoreDisplay.text = "Score: " + totalPoints.ToString();
 
-            feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.WrongTime);
+            FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.WrongTime);
 
             //inputField.text = string.Empty;
-            inputString.ResetString();
+            InputString.ResetString();
             return;
         }
 
@@ -213,7 +243,7 @@ public class Timeline : MonoBehaviour
         {
             scoredSuccessfully = true;
             //inputField.text = string.Empty;
-            inputString.ResetString();
+            InputString.ResetString();
             float accuracy = 1f - (Mathf.Abs(aroundBeatApex) / maxBeatError); // Accuracy depending on distance to beat. 
             float round = Mathf.Floor(accuracy * 100f) / 100f; // reduce to 2 decimal places
             accuracy = Mathf.Clamp01(round); // Clamp between 0 and 1
@@ -228,7 +258,7 @@ public class Timeline : MonoBehaviour
             scoreDisplay.text = "Score: " + totalPoints.ToString();
 
             // Categorize Score, then InitiateFeedback for graphic. 
-            feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
+            FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
 
             // Play sound of hiragana at proper pitch. 
             // currentBeat.clip
@@ -284,7 +314,7 @@ public class Timeline : MonoBehaviour
             if (currentBeat.text != string.Empty &&
                 !scoredSuccessfully)
             {
-                feedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
+                FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
             }
 
             canStopRecognition = false;
@@ -293,7 +323,7 @@ public class Timeline : MonoBehaviour
             scoredSuccessfully = false;
 
             //inputField.text = string.Empty;
-            inputString.ResetString();
+            InputString.ResetString();
         }
 
         float TimelinePos = beatTime * BeatDistance;
@@ -318,7 +348,7 @@ public class Timeline : MonoBehaviour
     public void PauseGame(bool doPause)
     {
         GameManager.PauseGame(doPause);
-        summaryScreen.Pause(doPause);
+        SummaryScreen.Pause(doPause);
     }
 
     void LevelEnd()
@@ -332,8 +362,8 @@ public class Timeline : MonoBehaviour
 
         // level ending transition
         // maybe goto a level success or failure screen with stats
-        summaryScreen.gameObject.SetActive(true);
-        summaryScreen.Activate();
+        SummaryScreen.gameObject.SetActive(true);
+        SummaryScreen.Activate();
         // switch to main menu with said conclusion screen
     }
 

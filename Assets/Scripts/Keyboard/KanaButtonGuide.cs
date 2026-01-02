@@ -14,7 +14,7 @@ public class KanaButtonGuide : MonoBehaviour
     Vector3 position;
     Vector3 relUpOffset = new Vector3(0f, 50f, 0f);
 
-    private void Start()
+    public void Initialize()
     {
         OneBig = transform.GetChild(0);
         OneBigTMP = OneBig.GetComponent<TMP_Text>();

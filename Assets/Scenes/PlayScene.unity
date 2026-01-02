@@ -2094,6 +2094,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b24418b6287459ba4ebf4e0d4b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  gmFields:
+    Camera: {fileID: 519420031}
+    canvasRectTransform: {fileID: 364773283}
+    timelineCameraPosition: {fileID: 1972781112}
+  tlFields:
+    progressBar: {fileID: 354748509}
+    InputString: {fileID: 1710606708}
+    SummaryScreen: {fileID: 1321406980}
+    FeedbackGraphic: {fileID: 478005831}
+    currentWordTMP: {fileID: 497287633}
+    currentKanaTMP: {fileID: 1820204120}
+    scoreDisplay: {fileID: 1253803047}
+  Timeline: {fileID: 1100645228}
+  KanaKeyboard: {fileID: 1240827987}
 --- !u!4 &404005407
 Transform:
   m_ObjectHideFlags: 0

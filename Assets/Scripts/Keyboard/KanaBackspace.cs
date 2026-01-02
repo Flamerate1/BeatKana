@@ -12,7 +12,7 @@ public class KanaBackspace : MonoBehaviour
     Vector2 buttonTR;
 
     RectTransform rectTransform;
-    KanaKeyboard kanaKeyboard;
+    KanaKeyboard KanaKeyboard;
 
     private void OnEnable()
     {
@@ -41,13 +41,13 @@ public class KanaBackspace : MonoBehaviour
     {
         if (TouchManager.IsPressed(key))
         {
-            kanaKeyboard.BackspaceOnField();
+            KanaKeyboard.BackspaceOnField();
         }
     }
 
     void Start()
     {
-        kanaKeyboard = GetComponentInParent<KanaKeyboard>();
+        KanaKeyboard = GetComponentInParent<KanaKeyboard>();
         rectTransform = GetComponent<RectTransform>();
     }
 

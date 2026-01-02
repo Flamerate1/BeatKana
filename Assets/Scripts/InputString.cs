@@ -9,14 +9,9 @@ public class InputString : MonoBehaviour
 
     TMP_Text tmpText;
 
-    void Awake()
+    public void Initialize()
     {
         tmpText = GetComponent<TMP_Text>();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void ResetString()
@@ -37,6 +32,7 @@ public class InputString : MonoBehaviour
     public void RemoveFromEnd(int amount)
     {
         int len = tmpText.text.Length;
+        if (len - amount < 0) { return; }
         tmpText.text = tmpText.text.Remove(len - amount);
     }
     public void RemoveFromEnd() { RemoveFromEnd(1); }
