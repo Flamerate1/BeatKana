@@ -7,6 +7,9 @@ public class KanaKeyboard : MonoBehaviour
     InputString InputString;
     KanaButtonGuide KanaButtonGuide;
 
+    [SerializeField] KanaButton BigAKanaButton;
+    KanaButton[] KanaButtons;
+
     public void SetDakutenSpecialKeys(string[] keys) { this.dakutenSpecialKeys = keys; }
     string[] dakutenSpecialKeys = new string[5];
 
@@ -16,6 +19,8 @@ public class KanaKeyboard : MonoBehaviour
     }
     public void Initialize()
     {
+        BigAKanaButton.gameObject.SetActive(false);
+
         //inputField = GameManager.inputField;
         //InputString = GameManager.InputString;
         KanaButtonGuide = gameObject.GetComponentInChildren<KanaButtonGuide>();

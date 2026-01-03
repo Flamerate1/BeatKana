@@ -7,58 +7,12 @@ public class QueueTimeline : Timeline
 {
     #region Vars
 
-    [SerializeField] Level levelObject; // Optional Level scriptable object. 
-    //bool isGameOver = false;
-    //bool isLevelLoaded = false;
-
-    int BPM = 60;
-
-    float BeatDistance = 1.0f;
-    float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
-    BeatElement[] beatElementsBank; // Assume in order for now. 
-
-    int levelPreBeats = 3;
-    int betweenBeats = 1;
-    int levelPostBeats = 2;
-
-
-    float BPS; // Calculate from BPM / 60 seconds per minute;
-    float timelineSpeed; // Calculated from BPM and BeatDistance. Physical speed that the positions moves with
-    int previousBeatIndex = 0; // Used to play code at every beat increment.
-    float beatTime = 0f; // Accumulated actual time that has passed
-    int currentBeatIndex = 0; // The current beat which is seconds / BPM
-    float aroundBeatApex = 0f; // time between now and the actual current beat point.
-    bool canStartRecognition = false; // Enables single flip of duringKeyRecognition to true at start of input period. 
-    bool canStopRecognition = false; // Enables single flip of duringKeyRecognition to false at end of input period.  
-    bool duringKeyRecognition = false; // true during the moments when the player can input for the letter and score. 
-    float levelProgress = 0f; // Between 0 and 1 for how far the level has progressed
-
-    // Performance stats
-    bool scoredSuccessfully = false; // resets during each input period. 
-    int totalPoints = 0; // Accumulated points
-    SummaryScreen SummaryScreen;
-
-    // Beat Processing and note keeping
-    Beat currentBeat; // Reference to the current Beat class instance
-    List<Beat> beatList; /// List of beat classes
-    GameObject timelineBeatPrefab; // the actual visual beat prefab that reacts to input
-    TimelineBeat[] beatObjects; // the list of beat objects that can be manipulated
-
-    // Visual Section
-    GameObject beatLine; // Visual guideline made at every beat position. 
-    GameObject beatLineBlack; // Visual guideline made at every beat position. 
-    LineRenderer progressBar; // Bar that display how far through the level the player is. 
-    //TMP_InputField inputField;
-    InputString InputString;
-    TMP_Text currentWordTMP;
-    TMP_Text currentKanaTMP;
-    TMP_Text scoreDisplay;
-    FeedbackGraphic FeedbackGraphic;
-
     // QueueTimeline Specific
     float timeRemaining;
     float timeMultiplier = 1f;
     float maxTimeRemaining = 2f;
+
+    protected LineRenderer timeRemainingBar; // Bar that displays time left for a beat in Queue
 
     #endregion
 
@@ -66,6 +20,7 @@ public class QueueTimeline : Timeline
     public override void PlayManagerSetFields(PlayManager.TLFields tlFields)
     {
         this.progressBar = tlFields.progressBar;
+        this.timeRemainingBar = tlFields.timeRemainingBar;
         this.InputString = tlFields.InputString;
         this.SummaryScreen = tlFields.SummaryScreen;
         this.FeedbackGraphic = tlFields.FeedbackGraphic;
@@ -113,13 +68,6 @@ public class QueueTimeline : Timeline
             ref levelPostBeats
         );
 
-
-        // BPM based on level data
-        BPS = 60f / BPM;
-
-        // BeatDistance based on level data (maybe)
-        timelineSpeed = BPS * BeatDistance;
-
         // Load beatLine
         beatLine = Resources.Load<GameObject>("BeatLine");
         beatLineBlack = Resources.Load<GameObject>("BeatLine BlackVariant");
@@ -145,12 +93,8 @@ public class QueueTimeline : Timeline
 
         for (int i = 0; i < beatElementsBank.Length; i++)
         {
-            //Beat.ProcessElement(ref beatsList, beatElementsBank[i]);
             beatElementsBank[i].ProcessToBeat(ref beatsList);
-            //Beat.AddEmptyBeats(ref beatsList, betweenBeats);
         }
-
-        //Beat.AddEmptyBeats(ref beatsList, levelPostBeats);
     }
 
     // This method instantiates the beat prefabs into child objects of the Timeline. 
@@ -183,34 +127,27 @@ public class QueueTimeline : Timeline
     #region Runtime: CheckBeat(), Update()
     public void CheckBeat(string text) 
     {
+        if (!base.CheckBeatGuards(text)) { return; }
+
         if (timeRemaining < 0) 
         {
             Debug.Log("No more time for CheckBeat");
             return;
         }
 
-        if (text == string.Empty)
-        {
-            Debug.Log("Nothing in inputField");
-            return;
-        }
-        if (GameManager.gamePaused || // pause state stops input  
-            isGameOver 
-            ) 
-        {
-            InputString.ResetString();
-            Debug.Log("Can't input. Game is paused");
-            return;
-        }
-
+        
 
         // Correct Input
         if (text.Contains(currentBeat.text)) // if text match
         {
+            int excessChars = text.Length - currentBeat.text.Length;
+            int subtractPoints = excessChars * 20;
+            totalPoints -= subtractPoints;
+
             //scoredSuccessfully = true;
             InputString.ResetString();
 
-            int points = Mathf.FloorToInt(timeRemaining / maxTimeRemaining);
+            int points = Mathf.FloorToInt(100f * (timeRemaining / maxTimeRemaining));
 
             // Add to total score. 
             totalPoints += points;
@@ -221,9 +158,23 @@ public class QueueTimeline : Timeline
             // Categorize Score, then InitiateFeedback for graphic. 
             FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
 
-            AdvanceToNextBeat();
 
+            Debug.Log("Scored: " + points.ToString() +" - "+ subtractPoints.ToString()+" = "+ (points-subtractPoints).ToString());
+
+            AdvanceToNextBeat();
         }
+        /*else if (text.Length > currentBeat.text.Length) // Punish player for incorrect input
+        { 
+            // punish player code
+            totalPoints -= 20;
+
+            // Update ScoreDisplay
+            scoreDisplay.text = "Score: " + totalPoints.ToString();
+
+            FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.WrongTime);
+
+            InputString.ResetString();
+        }*/
     }
 
     void AdvanceToNextBeat()
@@ -252,17 +203,10 @@ public class QueueTimeline : Timeline
 
     void Update()
     {
-        /*
-        if (isGameOver) return;
-        if (!isLevelLoaded) return;
-        if (GameManager.gamePaused) { return; } // don't update if game is paused
-        */
-
-        // Queue Timeline Specific
+        if (!base.UpdateGuards()) return;
 
         timeRemaining -= Time.deltaTime * timeMultiplier;
         if (timeRemaining < 0)  { AdvanceToNextBeat(); }
-
 
 
         float TimelinePos = currentBeatIndex * BeatDistance;
@@ -278,33 +222,16 @@ public class QueueTimeline : Timeline
         var progress_rel_x = (cam_right - cam_left) * levelProgress;
         progressBarPos.x = progress_rel_x + cam_left;
         progressBar.SetPosition(1, progressBarPos);
+
+        // Update timeRemaining bar
+        var timeBarPos = timeRemainingBar.GetPosition(1);
+        // Reuse cam_left and cam_right
+
+        var relTime = timeRemaining / maxTimeRemaining;
+        var time_rel_x = (cam_right - cam_left) * relTime;
+        timeBarPos.x = time_rel_x + cam_left;
+        timeRemainingBar.SetPosition(1, timeBarPos);
+
     }
-    #endregion
-
-    #region Other Helpers: PauseGame(), LevelEnd()
-
-    public void PauseGame() { PauseGame(!GameManager.gamePaused); }
-    public void PauseGame(bool doPause)
-    {
-        GameManager.PauseGame(doPause);
-        SummaryScreen.Pause(doPause);
-    }
-
-    void LevelEnd()
-    {
-        isGameOver = true;
-        //GameManager.PauseGame(true);
-
-        // Update stats, then save game
-
-        GameManager.SaveGame();
-
-        // level ending transition
-        // maybe goto a level success or failure screen with stats
-        SummaryScreen.gameObject.SetActive(true);
-        SummaryScreen.Activate();
-        // switch to main menu with said conclusion screen
-    }
-
     #endregion
 }

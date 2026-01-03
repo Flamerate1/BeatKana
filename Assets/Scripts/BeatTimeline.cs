@@ -7,52 +7,18 @@ public class BeatTimeline : Timeline
 {
     #region Vars
 
-    [SerializeField] Level levelObject; // Optional Level scriptable object. 
-    //bool isGameOver = false;
-    //bool isLevelLoaded = false;
 
-    int BPM = 60;
-    float BeatDistance = 1.0f;
-    float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
-    BeatElement[] beatElementsBank; // Assume in order for now. 
-
-    int levelPreBeats = 3;
-    int betweenBeats = 1;
-    int levelPostBeats = 2;
-
+    // BeatTimeline specific 
 
     float BPS; // Calculate from BPM / 60 seconds per minute;
-    float timelineSpeed; // Calculated from BPM and BeatDistance. Physical speed that the positions moves with
     int previousBeatIndex = 0; // Used to play code at every beat increment.
     float beatTime = 0f; // Accumulated actual time that has passed
-    int currentBeatIndex = 0; // The current beat which is seconds / BPM
     float aroundBeatApex = 0f; // time between now and the actual current beat point.
     bool canStartRecognition = false; // Enables single flip of duringKeyRecognition to true at start of input period. 
     bool canStopRecognition = false; // Enables single flip of duringKeyRecognition to false at end of input period.  
     bool duringKeyRecognition = false; // true during the moments when the player can input for the letter and score. 
-    float levelProgress = 0f; // Between 0 and 1 for how far the level has progressed
-
-    // Performance stats
     bool scoredSuccessfully = false; // resets during each input period. 
-    int totalPoints = 0; // Accumulated points
-    SummaryScreen SummaryScreen;
-
-    // Beat Processing and note keeping
-    Beat currentBeat; // Reference to the current Beat class instance
-    List<Beat> beatList; /// List of beat classes
-    GameObject timelineBeatPrefab; // the actual visual beat prefab that reacts to input
-    TimelineBeat[] beatObjects; // the list of beat objects that can be manipulated
-
-    // Visual Section
-    GameObject beatLine; // Visual guideline made at every beat position. 
-    GameObject beatLineBlack; // Visual guideline made at every beat position. 
-    LineRenderer progressBar; // Bar that display how far through the level the player is. 
-    //TMP_InputField inputField;
-    InputString InputString;
-    TMP_Text currentWordTMP;
-    TMP_Text currentKanaTMP;
-    TMP_Text scoreDisplay;
-    FeedbackGraphic FeedbackGraphic;
+    
     #endregion
 
     #region Start(), LoadTimeline(), GenerateBeatListSequential() & MakeBeats()
@@ -109,9 +75,6 @@ public class BeatTimeline : Timeline
 
         // BPM based on level data
         BPS = 60f / BPM;
-
-        // BeatDistance based on level data (maybe)
-        timelineSpeed = BPS * BeatDistance;
 
         // Load beatLine
         beatLine = Resources.Load<GameObject>("BeatLine");
@@ -175,21 +138,7 @@ public class BeatTimeline : Timeline
     #region Runtime: CheckBeat(), Update()
     public void CheckBeat(string text) 
     {
-        if (text == string.Empty)
-        {
-            Debug.Log("Nothing in inputField");
-            return;
-        }
-
-        if (GameManager.gamePaused || // stop input from pauses state
-            isGameOver 
-            ) 
-        {
-            //inputField.text = string.Empty;
-            InputString.ResetString();
-            Debug.Log("Can't input. Game is paused");
-            return;
-        }
+        if (!base.CheckBeatGuards(text)) { return; }
 
         // Punish player if inputted during wrong moments
         if ((!duringKeyRecognition || // Quit if can't score now.
@@ -233,22 +182,12 @@ public class BeatTimeline : Timeline
 
             // Categorize Score, then InitiateFeedback for graphic. 
             FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
-
-            // Play sound of hiragana at proper pitch. 
-            // currentBeat.clip
-            // currentBeat.pitchIsHigh
-
         }
     }
 
     void Update()
     {
-        /*
-        if (isGameOver) return;
-        if (!isLevelLoaded) return;
-        if (GameManager.gamePaused) { return; } // don't update if game is paused
-        */
-
+        if (!base.UpdateGuards()) return;
         beatTime += Time.deltaTime / BPS; // Time counted as amount of beats (float, not discrete int)
         currentBeatIndex = Mathf.FloorToInt(beatTime);  // time as discrete int
         if (currentBeatIndex >= beatList.Count) { LevelEnd(); return; } // End level when beat index hits end of beatList count
@@ -282,7 +221,6 @@ public class BeatTimeline : Timeline
         {
             canStartRecognition = false;
             duringKeyRecognition = true;
-            //CheckBeat(); // Check Beat after turn on key recognition (duringKeyRecognition must be true)
         }
 
         if (canStopRecognition && aroundBeatApex >= maxBeatError)
@@ -316,32 +254,5 @@ public class BeatTimeline : Timeline
         progressBarPos.x = progress_rel_x + cam_left;
         progressBar.SetPosition(1, progressBarPos);
     }
-    #endregion
-
-    #region Other Helpers: PauseGame(), LevelEnd()
-
-    public void PauseGame() { PauseGame(!GameManager.gamePaused); }
-    public void PauseGame(bool doPause)
-    {
-        GameManager.PauseGame(doPause);
-        SummaryScreen.Pause(doPause);
-    }
-
-    void LevelEnd()
-    {
-        isGameOver = true;
-        //GameManager.PauseGame(true);
-
-        // Update stats, then save game
-
-        GameManager.SaveGame();
-
-        // level ending transition
-        // maybe goto a level success or failure screen with stats
-        SummaryScreen.gameObject.SetActive(true);
-        SummaryScreen.Activate();
-        // switch to main menu with said conclusion screen
-    }
-
     #endregion
 }

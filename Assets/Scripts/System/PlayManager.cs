@@ -15,7 +15,6 @@ public class PlayManager : MonoBehaviour
     [Serializable]
     public struct TLFields // Timeline Fields
     {
-        // progressBar, inputString
         public LineRenderer progressBar;
         public LineRenderer timeRemainingBar;
         public InputString InputString;
@@ -67,5 +66,12 @@ public class PlayManager : MonoBehaviour
 
         KanaKeyboard.PlayManagerSetFields(tlFields);
         KanaKeyboard.Initialize();
+    }
+
+    public void PauseGame() { PauseGame(!GameManager.gamePaused); }
+    public void PauseGame(bool doPause)
+    {
+        GameManager.PauseGame(doPause);
+        tlFields.SummaryScreen.Pause(doPause);
     }
 }
