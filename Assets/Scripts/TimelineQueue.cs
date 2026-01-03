@@ -8,10 +8,11 @@ public class QueueTimeline : Timeline
     #region Vars
 
     [SerializeField] Level levelObject; // Optional Level scriptable object. 
-    bool isGameOver = false;
-    bool isLevelLoaded = false;
+    //bool isGameOver = false;
+    //bool isLevelLoaded = false;
 
     int BPM = 60;
+
     float BeatDistance = 1.0f;
     float maxBeatError = 0.2f; // Can't be equal to or more than 0.25f;
     BeatElement[] beatElementsBank; // Assume in order for now. 
@@ -55,7 +56,7 @@ public class QueueTimeline : Timeline
     FeedbackGraphic FeedbackGraphic;
 
     // QueueTimeline Specific
-    float timeRemaining = 2f;
+    float timeRemaining;
     float timeMultiplier = 1f;
     float maxTimeRemaining = 2f;
 
@@ -133,6 +134,7 @@ public class QueueTimeline : Timeline
         // Make BeatObjects
         beatObjects = MakeBeats(beatList);
         isLevelLoaded = true;
+        AdvanceToNextBeat(0);
         GameManager.PauseGame(false);
     }
 
@@ -201,41 +203,12 @@ public class QueueTimeline : Timeline
             return;
         }
 
-        /*
-        // Punish player if inputted during wrong moments
-        if ((!duringKeyRecognition || // Quit if can't score now.
-            scoredSuccessfully || // Don't search any longer if scored already.
-            currentBeat.text == string.Empty) && // Don't search if currently an empty beat
-            text != string.Empty
-            )
-        { 
-            Debug.Log("Can't input. Wrong time!");
-            // punish player code
-            totalPoints -= 20;
-
-            // Update ScoreDisplay
-            scoreDisplay.text = "Score: " + totalPoints.ToString();
-
-            FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.WrongTime);
-
-            //inputField.text = string.Empty;
-            InputString.ResetString();
-            return;
-        }*/
-
 
         // Correct Input
         if (text.Contains(currentBeat.text)) // if text match
         {
             //scoredSuccessfully = true;
             InputString.ResetString();
-
-            //float accuracy = 1f - (Mathf.Abs(aroundBeatApex) / maxBeatError); // Accuracy depending on distance to beat. 
-            //float round = Mathf.Floor(accuracy * 100f) / 100f; // reduce to 2 decimal places
-            //accuracy = Mathf.Clamp01(round); // Clamp between 0 and 1
-
-            //var points = 20 + Mathf.RoundToInt(accuracy * 100f);
-            //Debug.Log("Scored: " + points.ToString());
 
             int points = Mathf.FloorToInt(timeRemaining / maxTimeRemaining);
 
@@ -249,9 +222,6 @@ public class QueueTimeline : Timeline
             FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
 
             AdvanceToNextBeat();
-            // Play sound of hiragana at proper pitch. 
-            // currentBeat.clip
-            // currentBeat.pitchIsHigh
 
         }
     }
@@ -271,20 +241,22 @@ public class QueueTimeline : Timeline
 
         levelProgress = (float)currentBeatIndex / beatList.Count;
         currentBeat = beatList[currentBeatIndex];
-        Debug.Log(currentBeatIndex.ToString() + ", " + levelProgress.ToString());
 
         InputString.ResetString();
+    }
+    void AdvanceToNextBeat(int index)
+    {
+        currentBeatIndex = index - 1;
+        AdvanceToNextBeat();
     }
 
     void Update()
     {
+        /*
         if (isGameOver) return;
         if (!isLevelLoaded) return;
         if (GameManager.gamePaused) { return; } // don't update if game is paused
-
-        // ==================================================================================
-        // ==================================================================================
-        // ==================================================================================
+        */
 
         // Queue Timeline Specific
 
@@ -296,69 +268,6 @@ public class QueueTimeline : Timeline
         float TimelinePos = currentBeatIndex * BeatDistance;
         var pos = Vector3.right * (-TimelinePos);
         transform.position = pos;
-
-        // ==================================================================================
-        // ==================================================================================
-        // ==================================================================================
-
-        /*
-        beatTime += Time.deltaTime / BPS; // Time counted as amount of beats (float, not discrete int)
-        currentBeatIndex = Mathf.FloorToInt(beatTime);  // time as discrete int
-        if (currentBeatIndex >= beatList.Count) { LevelEnd(); return; } // End level when beat index hits end of beatList count
-
-        currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
-        aroundBeatApex = (beatTime - currentBeatIndex) - 0.5f; // Amount of time between now and the apex of the current beat. 
-
-        levelProgress = beatTime / beatList.Count;
-
-        if (currentBeatIndex != previousBeatIndex)
-        {
-            // Code to switch text, image, etc about beat
-            previousBeatIndex = currentBeatIndex;
-            canStartRecognition = true;
-            canStopRecognition = true;
-
-            // Update Visuals based on current Beat class
-            if (currentBeatIndex < beatList.Count)
-            {
-                currentKanaTMP.text = beatList[currentBeatIndex].text;
-                currentWordTMP.text = beatList[currentBeatIndex].word;
-            }
-            else
-            {
-                currentKanaTMP.text = string.Empty;
-                currentWordTMP.text = string.Empty;
-            }
-        }
-
-        if (canStartRecognition && aroundBeatApex >= -maxBeatError)
-        {
-            canStartRecognition = false;
-            duringKeyRecognition = true;
-            //CheckBeat(); // Check Beat after turn on key recognition (duringKeyRecognition must be true)
-        }
-
-        if (canStopRecognition && aroundBeatApex >= maxBeatError)
-        {
-            if (currentBeat.text != string.Empty &&
-                !scoredSuccessfully)
-            {
-                FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
-            }
-
-            canStopRecognition = false;
-            duringKeyRecognition = false;
-
-            scoredSuccessfully = false;
-
-            //inputField.text = string.Empty;
-            InputString.ResetString();
-        }
-
-        float TimelinePos = beatTime * BeatDistance;
-        var pos = Vector3.right * (-TimelinePos);
-        transform.position = pos;
-        */
 
         // Update progress bar
         var progressBarPos = progressBar.GetPosition(1);

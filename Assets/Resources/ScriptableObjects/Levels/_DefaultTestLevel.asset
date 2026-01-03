@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: _DefaultTestLevel
   m_EditorClassIdentifier: Assembly-CSharp::Level
   LevelName: TESTING
+  levelType: 0
   difficulty:
     BPM: 20
     BeatDistance: 3
-    maxBeatError: 0.2
+    maxBeatError: 0.45
     showKana: 1
   beatElementsBank:
-  - {fileID: 11400000, guid: 9a43bc88e9e47ff4c990d4338fef34d4, type: 2}
-  - {fileID: 11400000, guid: 11d183ca950baa341af28ece52ac50ee, type: 2}
-  - {fileID: 11400000, guid: 36067f02e9b76b246a1a7ad577c9dd28, type: 2}
+  - {fileID: 11400000, guid: d945314c7a858a146b6d144395e0e83b, type: 2}
+  - {fileID: 11400000, guid: 3ca8540dfa1605a4cb62f015b7465ce3, type: 2}
+  - {fileID: 11400000, guid: bbc039f2a3bcd6c4fbf84349ec0dc64f, type: 2}
   beatCounts:
     levelPreBeats: 1
     betweenBeats: 1

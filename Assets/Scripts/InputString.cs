@@ -12,11 +12,14 @@ public class InputString : MonoBehaviour
     public void Initialize()
     {
         tmpText = GetComponent<TMP_Text>();
+        Debug.Log("InputString.Initialize");
+        Debug.Log("The text: " + tmpText.text);
     }
 
     public void ResetString()
     {
         tmpText.text = string.Empty;
+        Debug.Log("InputString.ResetString");
         //UpdateStringEvent?.Invoke(); //Not necessary to check empty
     }
     public void AddString(string addition)

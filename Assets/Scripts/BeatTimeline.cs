@@ -8,8 +8,8 @@ public class BeatTimeline : Timeline
     #region Vars
 
     [SerializeField] Level levelObject; // Optional Level scriptable object. 
-    bool isGameOver = false;
-    bool isLevelLoaded = false;
+    //bool isGameOver = false;
+    //bool isLevelLoaded = false;
 
     int BPM = 60;
     float BeatDistance = 1.0f;
@@ -243,9 +243,11 @@ public class BeatTimeline : Timeline
 
     void Update()
     {
+        /*
         if (isGameOver) return;
         if (!isLevelLoaded) return;
         if (GameManager.gamePaused) { return; } // don't update if game is paused
+        */
 
         beatTime += Time.deltaTime / BPS; // Time counted as amount of beats (float, not discrete int)
         currentBeatIndex = Mathf.FloorToInt(beatTime);  // time as discrete int
