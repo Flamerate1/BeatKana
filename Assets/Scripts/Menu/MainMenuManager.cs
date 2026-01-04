@@ -71,21 +71,6 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    /*
-    public void GoToLevelMenuButton()
-    {
-
-    }
-
-    public void GoToMainMenuButton()
-    {
-
-    }
-
-    public void GoToSettingsMenuButton()
-    {
-
-    }*/
 
     public void QuitGameButton()
     {

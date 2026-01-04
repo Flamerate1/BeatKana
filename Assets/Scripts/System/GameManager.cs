@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
 
 
     private static string path;
-    public static PlayerSaveData playerSaveData; // Stores level progression, currencies, etc
+    public static PlayerSaveData PlayerSaveData; // Stores level progression, currencies, etc
 
     private void Awake()
     {
@@ -113,8 +113,8 @@ public class GameManager : MonoBehaviour
 
     public static void SaveGame()
     {
-        // Grab playerSaveData from GameManager and put it into json to place into a save file. 
-        string json = JsonUtility.ToJson(playerSaveData, true);
+        // Grab PlayerSaveData from GameManager and put it into json to place into a save file. 
+        string json = JsonUtility.ToJson(PlayerSaveData, true);
         File.WriteAllText(path, json);
         Debug.Log(json);
         Debug.Log("Saved to: " + path);
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
 
     static void LoadGame()
     {
-        // Grab data from json and put it into GameManager's playerSaveData object. 
+        // Grab data from json and put it into GameManager's PlayerSaveData object. 
         // Update saveVersion
 
         
@@ -130,13 +130,15 @@ public class GameManager : MonoBehaviour
         if (!File.Exists(path))
         {
             Debug.LogWarning("No save file found, returning new save.");
-            playerSaveData = new PlayerSaveData();
+            PlayerSaveData = new PlayerSaveData();
             return;
         }
         
         string json = File.ReadAllText(path);
         Debug.Log(json);
-        playerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
+        PlayerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
+        PlayerSaveData.InitLevelDataDictionary();
+
 
         // If no save data create default save file. 
     }
