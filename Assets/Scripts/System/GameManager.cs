@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     public static void SetLevel(Level level) { currentLevel = level; }
 
 
-    private static string path;
+    private static string saveDataPath; // 
     public static PlayerSaveData PlayerSaveData; // Stores level progression, currencies, etc
 
     private void Awake()
@@ -45,9 +45,8 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        path = Path.Combine(Application.persistentDataPath, "save.json");
-        LoadGame();
-        //SaveGame(); // for testing save function
+        saveDataPath = Path.Combine(Application.persistentDataPath, "save.json");
+        PlayerSaveData = PlayerSaveData.LoadFromJson(saveDataPath);
     }
 
     public static void PlayManagerSetFields(PlayManager.GMFields gmFields)
@@ -109,38 +108,6 @@ public class GameManager : MonoBehaviour
         if (doPause) { GameManager.gamePaused = true; Time.timeScale = 0.0f; }
         else { GameManager.gamePaused = false; Time.timeScale = 1.0f; }
         Debug.Log("Game paused?: " + doPause.ToString());
-    }
-
-    public static void SaveGame()
-    {
-        // Grab PlayerSaveData from GameManager and put it into json to place into a save file. 
-        string json = JsonUtility.ToJson(PlayerSaveData, true);
-        File.WriteAllText(path, json);
-        Debug.Log(json);
-        Debug.Log("Saved to: " + path);
-    }
-
-    static void LoadGame()
-    {
-        // Grab data from json and put it into GameManager's PlayerSaveData object. 
-        // Update saveVersion
-
-        
-
-        if (!File.Exists(path))
-        {
-            Debug.LogWarning("No save file found, returning new save.");
-            PlayerSaveData = new PlayerSaveData();
-            return;
-        }
-        
-        string json = File.ReadAllText(path);
-        Debug.Log(json);
-        PlayerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
-        PlayerSaveData.InitLevelDataDictionary();
-
-
-        // If no save data create default save file. 
     }
 
     static void LoadLevelData()

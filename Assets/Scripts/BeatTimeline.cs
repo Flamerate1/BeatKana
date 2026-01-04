@@ -190,7 +190,7 @@ public class BeatTimeline : Timeline
         if (!base.UpdateGuards()) return;
         beatTime += Time.deltaTime / BPS; // Time counted as amount of beats (float, not discrete int)
         currentBeatIndex = Mathf.FloorToInt(beatTime);  // time as discrete int
-        if (currentBeatIndex >= beatList.Count) { LevelEnd(); return; } // End level when beat index hits end of beatList count
+        if (currentBeatIndex >= beatList.Count) { LevelEnd(true); return; } // End level when beat index hits end of beatList count
 
         currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
         aroundBeatApex = (beatTime - currentBeatIndex) - 0.5f; // Amount of time between now and the apex of the current beat. 

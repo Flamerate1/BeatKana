@@ -12,23 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f057d122c9bd12449f745c491ac0d42, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: Assembly-CSharp::Level
+  LevelName: Level 1
+  levelType: 0
   difficulty:
     BPM: 20
     BeatDistance: 3
     maxBeatError: 0.2
     showKana: 1
-  LevelName: Level 1
-  BPM: 20
-  BeatDistance: 3
-  maxBeatError: 0.2
   beatElementsBank:
   - {fileID: 11400000, guid: 9a43bc88e9e47ff4c990d4338fef34d4, type: 2}
-  - {fileID: 11400000, guid: 11d183ca950baa341af28ece52ac50ee, type: 2}
   - {fileID: 11400000, guid: 36067f02e9b76b246a1a7ad577c9dd28, type: 2}
   beatCounts:
-    levelPreBeats: 3
+    levelPreBeats: 2
     betweenBeats: 1
-    levelPostBeats: 2
-  levelPreBeats: 1
-  betweenBeats: 1
-  levelPostBeats: 1
+    levelPostBeats: 1

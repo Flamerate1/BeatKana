@@ -74,14 +74,17 @@ public abstract class Timeline : MonoBehaviour
         return true;
     }
 
-    protected void LevelEnd()
+
+    protected void LevelEnd(bool completed)
     {
         isGameOver = true;
         //GameManager.PauseGame(true);
 
         // Update stats, then save game
+        LevelCompletionRecord record = new LevelCompletionRecord(levelObject.LevelName, totalPoints, completed);
 
-        GameManager.SaveGame();
+        GameManager.PlayerSaveData.RecordLevelResult(record); // Saves the completion record, then determines if 
+        GameManager.PlayerSaveData.SaveToJson();
 
         // level ending transition
         // maybe goto a level success or failure screen with stats
