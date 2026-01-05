@@ -18,6 +18,8 @@ public class PlayLevelInfo : MonoBehaviour
         PlayLevelButton.onClick.RemoveAllListeners();
         PlayLevelButton.onClick.AddListener(() => MainMenuManager.GoToLevelButton(level));
 
+
+
     }
 
     public void Deactivate()

@@ -9,7 +9,6 @@ public class PlayerSaveData
     // internal use
     private string filePath; public void SetFilePath(string filePath) { this.filePath = filePath; }
 
-    // Save Data
 
     [SerializeField] string playerSaveId; 
     [SerializeField] int saveVersion; // Initialized in constructor: increment when notable changes are made. 
