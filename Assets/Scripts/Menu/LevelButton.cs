@@ -12,6 +12,7 @@ public class LevelButton : MonoBehaviour
     {
         MainMenuManager MainMenuManager = GetComponentInParent<MainMenuManager>();
         button = GetComponent<Button>();
-        button.onClick.AddListener(() => MainMenuManager.GoToLevelButton(level));
+        //button.onClick.AddListener(() => MainMenuManager.GoToLevelButton(level));
+        button.onClick.AddListener(() => MainMenuManager.ActivatePlayLevelInfo(this.level));
     }
 }

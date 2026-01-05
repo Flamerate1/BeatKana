@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,16 +10,33 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] Camera Camera;
 
-    public enum Menu 
-    { 
+
+    public enum Menu
+    {
         MainMenu, LevelMenu, SettingsMenu,
         Chapter1, Chapter2, Chapter3, Chapter4,
         Previous
     }
 
-    GameObject[] menus;
-    Menu currentMenu;
+    /*
+    [Serializable] 
+    public struct MenuObject
+    {
+        public Menu menu;
+        public GameObject gameObject;
+    }
+    [SerializeField] MenuObject[] MenuObjectStructs;
+    Dictionary<Menu, GameObject> menuObjects = new Dictionary<Menu, GameObject>();
+    */
+    MenuObject[] MenuObjects;
+    PlayLevelInfo PlayLevelInfo;
+    
+
+    //GameObject[] menus;
+    Menu currentMenu = Menu.MainMenu;
     Menu previousMenu;
+
+
     private void Awake()
     {
         GameManager.cam = Camera;
@@ -25,6 +44,43 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        PlayLevelInfo = GetComponentInChildren<PlayLevelInfo>();
+        PlayLevelInfo.Initialize(this);
+        PlayLevelInfo.Deactivate();
+
+        MenuObjects = GetComponentsInChildren<MenuObject>(); 
+        GameObject menuButtonPrefab = Resources.Load<GameObject>("MainMenuButton");
+        GameObject backButtonPrefab = Resources.Load<GameObject>("BackMenuButton");
+        foreach (MenuObject menuObject in MenuObjects)
+        {
+            if (menuObject.Menu != Menu.MainMenu)
+            {
+                GameObject instance = Instantiate(menuButtonPrefab, mainMenuButtonPos, Quaternion.identity);
+                instance.transform.SetParent(menuObject.transform, false);
+            }
+        }
+
+        // Instantiate
+        GoToMenuButton(Menu.MainMenu);
+
+        /*
+        var menuCount = MenuObjectStructs.Length;
+        menus = new GameObject[menuCount];
+
+        GameObject menuButtonPrefab = Resources.Load<GameObject>("MainMenuButton");
+        GameObject backButtonPrefab = Resources.Load<GameObject>("BackMenuButton");
+
+        // loop over menuObjects and place them into a dictionary
+        foreach (MenuObject menuObject in MenuObjectStructs)
+        {
+            menuObjects.Add(menuObject.menu, menuObject.gameObject);
+        }
+
+        // Instantiate
+        GoToMenuButton(Menu.MainMenu);
+        */
+
+        /*
         var childCount = transform.childCount;
         menus = new GameObject[childCount];
 
@@ -47,7 +103,7 @@ public class MainMenuManager : MonoBehaviour
 
         // Instantiate
         GoToMenuButton(Menu.MainMenu);
-        currentMenu = Menu.LevelMenu;
+        currentMenu = Menu.LevelMenu;*/
     }
 
     // The following are functions used EXCLUSIVELY by buttons!
@@ -59,6 +115,42 @@ public class MainMenuManager : MonoBehaviour
             GoToMenuButton(previousMenu);
             return;
         }
+
+        previousMenu = currentMenu;
+        currentMenu = menu;
+
+        foreach (MenuObject menuObject in MenuObjects)
+        {
+            if (menuObject.Menu == menu) 
+                menuObject.Activate(); 
+            else 
+                menuObject.Deactivate(); 
+        }
+
+        /*
+        foreach (KeyValuePair<Menu, GameObject> menuObject in menuObjects)
+        {
+            if (menuObject.Key == menu)
+            {
+                Debug.Log(menuObject.Key.ToString() + " was set on");
+                menuObject.Value.SetActive(true);
+            }
+            else
+            {
+                Debug.Log(menuObject.Key.ToString() + " was set off");
+                menuObject.Value.SetActive(false);
+            }
+        }*/
+
+
+        /*
+        // If previous menu, cut the method short
+        if (menu == Menu.Previous)
+        {
+            GoToMenuButton(previousMenu);
+            return;
+        }
+
         previousMenu = currentMenu;
         currentMenu = menu;
 
@@ -68,13 +160,18 @@ public class MainMenuManager : MonoBehaviour
         {
             bool isSelectedMenu = i == index;
             menus[i].SetActive(isSelectedMenu);
-        }
+        }*/
     }
 
 
     public void QuitGameButton()
     {
 
+    }
+
+    public void ActivatePlayLevelInfo(Level level)
+    {
+        PlayLevelInfo.Activate(level);
     }
 
     public void GoToLevelButton(Level level)

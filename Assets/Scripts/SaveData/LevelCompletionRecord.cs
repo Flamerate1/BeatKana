@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class LevelCompletionRecord
 {
-    public static void SetNextId(int nextId) { LevelCompletionRecord.nextId = nextId; Debug.Log(nextId.ToString()); }
+    public static void SetNextId(int nextId) { LevelCompletionRecord.nextId = nextId; Debug.Log("LevelCompletionRecord.nextId set to " + nextId.ToString()); }
     private static int nextId = 0; 
     public int id;
     public LevelCompletionRecord(string levelName, int score, bool completed)
