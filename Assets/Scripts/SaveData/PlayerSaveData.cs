@@ -12,23 +12,19 @@ public class PlayerSaveData
 
     [SerializeField] string playerSaveId; 
     [SerializeField] int saveVersion; // Initialized in constructor: increment when notable changes are made. 
-    [SerializeField] string testString;
-    [SerializeField] List<LevelSaveData> bestLevelData; // Data to save into json
-    [SerializeField] List<LevelCompletionRecord> LevelCompletionRecord_List; // Data to use at runtime
+    [SerializeField] List<LevelSaveData> bestLevelData; // Save to json. List of best level records
+    [SerializeField] List<LevelCompletionRecord> completionRecordData; // Save to json. List of level 
 
-    [System.NonSerialized]
-    public Dictionary<string, LevelSaveData> LevelSaveData_Dictionary;
+    [System.NonSerialized] // Convenience to use at runtime. Converted from bestLevelData
+    Dictionary<string, LevelSaveData> LevelSaveData_Dictionary; 
 
-    public PlayerSaveData() 
+    public PlayerSaveData() // constructor
     {
         playerSaveId = Guid.NewGuid().ToString();
-        saveVersion = 0; // increment when notable changes are made. 
-        testString = "seven";
-        //bestLevelData = new List<LevelSaveData> { new LevelSaveData("cool", 50), new LevelSaveData("cool5", 60), new LevelSaveData("cool7", 70) };
+        saveVersion = 0; // increment when notable changes are made after release
         bestLevelData = new List<LevelSaveData>();
         LevelSaveData_Dictionary = new Dictionary<string, LevelSaveData>();
-        // Make automated code detect all of the level data and stuff. 
-    }
+    } // constructor
 
     public void InitLevelDataDictionary()
     {
@@ -47,12 +43,14 @@ public class PlayerSaveData
 
     public void RecordLevelResult(LevelCompletionRecord levelCompletionRecord)
     {
-        this.LevelCompletionRecord_List.Add(levelCompletionRecord);
+        // Add level to dictionary. If failed, then don't save to best list. 
+        this.completionRecordData.Add(levelCompletionRecord);
         if (!levelCompletionRecord.completed) return; // No need to add to LevelSaveData_List
 
         // Compare previous and new LevelSaveData
         LevelSaveData newLevelSaveData = levelCompletionRecord.ConvertToLevelSaveData();
-        if (LevelSaveData_Dictionary.TryGetValue(levelCompletionRecord.levelName, out LevelSaveData oldLevelSaveData))
+        //if (LevelSaveData_Dictionary.TryGetValue(levelCompletionRecord.levelName, out LevelSaveData oldLevelSaveData))
+        if (GetBestLevel(levelCompletionRecord.levelName, out LevelSaveData oldLevelSaveData))
         {
             if (newLevelSaveData.score > oldLevelSaveData.score)
             {
@@ -80,8 +78,22 @@ public class PlayerSaveData
         }
     }
 
+    public bool GetBestLevel(string levelName, out LevelSaveData levelSaveData)
+    {
+        return LevelSaveData_Dictionary.TryGetValue(levelName, out levelSaveData);
+    }
+    public int GetTotalScore()
+    {
+        int totalScore = 0;
+        foreach (LevelSaveData levelSaveData in bestLevelData)
+        {
+            totalScore += levelSaveData.score;
+        }
+        return totalScore;
+    }
 
-
+    //====================================================================
+    #region Saving and Loading
     public void SaveToJson()
     {
         // Grab PlayerSaveData from GameManager and put it into json to place into a save file. 
@@ -101,8 +113,8 @@ public class PlayerSaveData
             loaded.InitLevelDataDictionary();
             loaded.SetFilePath(filePath);
             
-            int count = loaded.LevelCompletionRecord_List.Count;
-            int nextId = loaded.LevelCompletionRecord_List[count-1].id;
+            int count = loaded.completionRecordData.Count;
+            int nextId = loaded.completionRecordData[count-1].id;
             LevelCompletionRecord.SetNextId(nextId+1);
 
             return loaded;
@@ -116,4 +128,5 @@ public class PlayerSaveData
         }
 
     }
+    #endregion
 }

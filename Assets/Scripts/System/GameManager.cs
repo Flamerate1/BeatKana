@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        // Perform live screen updating
         if (SceneManager.GetActiveScene().name != "PlayScene") { return; }
 
         // Detect screen orientation

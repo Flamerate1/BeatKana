@@ -8,6 +8,7 @@ public class LevelCompletionRecord
     public static void SetNextId(int nextId) { LevelCompletionRecord.nextId = nextId; Debug.Log("LevelCompletionRecord.nextId set to " + nextId.ToString()); }
     private static int nextId = 0; 
     public int id;
+    public string guid;
     public LevelCompletionRecord(string levelName, int score, bool completed)
     {
         this.levelName = levelName;
@@ -16,6 +17,7 @@ public class LevelCompletionRecord
 
         this.dateTimeISO = DateTime.Now.ToString("o");
         this.id = nextId++;
+        this.guid = Guid.NewGuid().ToString();
     }
 
     public string levelName; // Will be the primary string used to index in Dictionary

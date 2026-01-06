@@ -36,6 +36,17 @@ public class Level : ScriptableObject
     [Serializable]
     public enum LevelType { Beat, Queue }
 
+    [Serializable] 
+    public struct Prereqs
+    {
+        public int minScore;
+        public Level[] requiredLevels;
+        public Prereqs(int minScore, Level[] requiredLevels)
+        {
+            this.minScore = minScore;
+            this.requiredLevels = requiredLevels;
+        }
+    }
 
 
     // Name used to assist in saved data referencing
@@ -45,6 +56,7 @@ public class Level : ScriptableObject
     public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true);
     public BeatElement[] beatElementsBank; // Assume in order for now. 
     public BeatCounts beatCounts = new BeatCounts(3, 1, 2);
+    public Prereqs prereqs = new Prereqs(0, new Level[0]);
 
 
     // method WITHOUT Level Name

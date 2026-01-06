@@ -27,8 +27,8 @@ public class PlayManager : MonoBehaviour
 
     [SerializeField] Level.LevelType levelType;
 
-    [SerializeField] GMFields gmFields;
-    [SerializeField] TLFields tlFields;
+    [SerializeField] GMFields gmFields; // Variables to set for the GameManager
+    [SerializeField] TLFields tlFields; // Variables to set for the Timeline
 
     [SerializeField] Timeline BeatTimeline;
     [SerializeField] Timeline QueueTimeline;
@@ -38,6 +38,7 @@ public class PlayManager : MonoBehaviour
 
     private void Awake()
     {
+        // Initialize GameManager
         GameManager.PlayManagerSetFields(gmFields); 
         GameManager.InitializePlayScene();
 
@@ -47,6 +48,7 @@ public class PlayManager : MonoBehaviour
             Debug.Log("Grabbing GM's LevelType");
         }
 
+        // Set the current timeline. 
         switch (levelType) {
             case Level.LevelType.Beat:
                 Timeline = BeatTimeline;
@@ -61,6 +63,7 @@ public class PlayManager : MonoBehaviour
                 break;
         }
 
+        // Initialize
         Timeline.PlayManagerSetFields(tlFields);
         Timeline.StartGame();
 
