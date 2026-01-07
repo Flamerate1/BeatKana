@@ -16,9 +16,9 @@ public class LevelSaveData
 
     public string InfoString()
     {
-        string the_string = 
+        string the_string =
+            name + "\n" +
             "Level Info\n" +
-            "Level Name: " + name + "\n" +
             "Max Score: " + score.ToString();
         return the_string;
     }

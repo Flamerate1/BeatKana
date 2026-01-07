@@ -1,9 +1,30 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Level", menuName = "Scriptable Objects/Level")]
 public class Level : ScriptableObject
 {
+    #region Stored Level Data
+    private static Dictionary<string, Level> _allLevelData;
+    public static void LoadLevelData() // Lazy initialization
+    {
+        if (_allLevelData != null) return; // already initialized
+
+        _allLevelData = new Dictionary<string, Level>();
+        Level[] levels = Resources.LoadAll<Level>("ScriptableObjects/Levels/");
+        foreach (Level level in levels)
+        {
+            _allLevelData.Add(level.LevelName, level);
+        }
+    }
+    public static bool TryGetLevelByName(string levelName, out Level level)
+    {
+        return _allLevelData.TryGetValue(levelName, out level);
+    }
+    #endregion 
+
+
     [Serializable]
     public struct DifficultyFields
     {
@@ -51,12 +72,14 @@ public class Level : ScriptableObject
 
     // Name used to assist in saved data referencing
     // Used as an ID to make sure that where ever a level is being loaded (the button, the level, etc), it can also use the proper saved data there. 
-    public string LevelName = string.Empty;
-    public LevelType levelType = LevelType.Beat;
-    public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true);
+    public string LevelName = string.Empty; // Technically also an ID
+    public LevelType levelType = LevelType.Beat; 
+    public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true); 
     public BeatElement[] beatElementsBank; // Assume in order for now. 
-    public BeatCounts beatCounts = new BeatCounts(3, 1, 2);
-    public Prereqs prereqs = new Prereqs(0, new Level[0]);
+    public BeatCounts beatCounts = new BeatCounts(3, 1, 2); // Only valid for LevelType.Beat
+    public Prereqs prereqs = new Prereqs(0, new Level[0]); // Determines which levels or score are necessary to access level
+
+    
 
 
     // method WITHOUT Level Name

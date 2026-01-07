@@ -79,6 +79,7 @@ public class MainMenuManager : MonoBehaviour
             else 
                 menuObject.Deactivate(); 
         }
+        PlayLevelInfo.gameObject.SetActive(false);
     }
 
 

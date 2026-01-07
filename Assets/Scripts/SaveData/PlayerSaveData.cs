@@ -82,6 +82,10 @@ public class PlayerSaveData
     {
         return LevelSaveData_Dictionary.TryGetValue(levelName, out levelSaveData);
     }
+    public bool IsLevelCompleted(string levelName)
+    {
+        return LevelSaveData_Dictionary.ContainsKey(levelName);
+    }
     public int GetTotalScore()
     {
         int totalScore = 0;
@@ -91,6 +95,36 @@ public class PlayerSaveData
         }
         return totalScore;
     }
+
+    public struct PrereqStats
+    {
+        public bool scoreSufficient;
+        public bool[] levelSufficient;
+    }
+    public bool IsLevelLocked(Level level, out PrereqStats stats)
+    {
+        stats = new PrereqStats();
+        // Fail is totalScore is too low. 
+        stats.scoreSufficient = GetTotalScore() >= level.prereqs.minScore;
+
+
+        // Fail if any level isn't present in completed levels
+        bool anyLevelsInsufficient = false;
+        stats.levelSufficient = new bool[level.prereqs.requiredLevels.Length];
+        var reqLvl = level.prereqs.requiredLevels;
+        for (var i = 0; i < reqLvl.Length; i++)  
+        {
+            stats.levelSufficient[i] = IsLevelCompleted(reqLvl[i].LevelName);
+            if (!stats.levelSufficient[i]) anyLevelsInsufficient = true;
+        }
+
+        // Return true if all prerequisities are met!
+        return !stats.scoreSufficient || anyLevelsInsufficient;
+    }
+
+    // Discard out argument
+    public bool IsLevelLocked(Level level) { return IsLevelLocked(level, out _); }
+
 
     //====================================================================
     #region Saving and Loading

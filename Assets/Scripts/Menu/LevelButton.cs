@@ -7,12 +7,26 @@ public class LevelButton : MonoBehaviour
     [SerializeField] Level level;
 
     Button button;
+    Image image;
 
     void Start()
     {
         MainMenuManager MainMenuManager = GetComponentInParent<MainMenuManager>();
         button = GetComponent<Button>();
+        image = GetComponent<Image>();
         //button.onClick.AddListener(() => MainMenuManager.GoToLevelButton(level));
         button.onClick.AddListener(() => MainMenuManager.ActivatePlayLevelInfo(this.level));
+
+        
+
+        if (GameManager.PlayerSaveData.IsLevelLocked(level))
+        {
+            image.color = Color.grey;
+        }
+        else if (!GameManager.PlayerSaveData.IsLevelCompleted(level.LevelName))
+        {
+            image.color = Color.greenYellow;
+        }
+
     }
 }

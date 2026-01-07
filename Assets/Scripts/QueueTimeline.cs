@@ -177,17 +177,17 @@ public class QueueTimeline : Timeline
         }*/
     }
 
-    void CheckEnd() { if (currentBeatIndex >= beatList.Count) { LevelEnd(true); return; } }
+    bool CheckEnd() { if (currentBeatIndex >= beatList.Count) { LevelEnd(true); return true; } return false; }
     void AdvanceToNextBeat()
     {
         timeRemaining = maxTimeRemaining;
         currentBeatIndex++;
-        CheckEnd(); // Check once
+        if (CheckEnd()) return; // Check once
 
         while (beatList[currentBeatIndex].text == string.Empty)
         {
             currentBeatIndex++; // Skip empty beats
-            CheckEnd(); // Check once
+            if (CheckEnd()) return; // Check once
         }
 
 

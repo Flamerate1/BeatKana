@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
 
         saveDataPath = Path.Combine(Application.persistentDataPath, "save.json");
         PlayerSaveData = PlayerSaveData.LoadFromJson(saveDataPath);
+
+        Level.LoadLevelData();
     }
 
     public static void PlayManagerSetFields(PlayManager.GMFields gmFields)
@@ -65,6 +67,7 @@ public class GameManager : MonoBehaviour
     // Keeps the camera's position at the designated UI location set by TimelinePositionRectTransform
     public static void UpdateCameraPosition()
     {
+        Debug.Log("Updated camera position");
         lastWidth = Screen.width;
         lastHeight = Screen.height;
 

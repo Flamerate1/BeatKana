@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f057d122c9bd12449f745c491ac0d42, type: 3}
+  m_Name: Level 4
+  m_EditorClassIdentifier: Assembly-CSharp::Level
+  LevelName: Level 3
+  levelType: 0
+  difficulty:
+    BPM: 60
+    BeatDistance: 1
+    maxBeatError: 0.2
+    showKana: 1
+  beatElementsBank:
+  - {fileID: 11400000, guid: 22b0dd4a28fed7942a7d5ce2876414f2, type: 2}
+  - {fileID: 11400000, guid: f5dbbf75968d311459782eff4dbf4e62, type: 2}
+  - {fileID: 11400000, guid: 61af283dc42f11448991adf672ef9a5e, type: 2}
+  - {fileID: 11400000, guid: 138dc70300e13ec4a903d06b308d2384, type: 2}
+  - {fileID: 11400000, guid: 93c3f6c211bd593418ff1137d254050b, type: 2}
+  beatCounts:
+    levelPreBeats: 3
+    betweenBeats: 1
+    levelPostBeats: 2
+  prereqs:
+    minScore: 1200
+    requiredLevels:
+    - {fileID: 11400000, guid: d60feba8058469c4896dd70733cc556b, type: 2}

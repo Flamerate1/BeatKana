@@ -29,23 +29,40 @@ public class PlayLevelInfo : MonoBehaviour
             textBox.text = savedLevel.InfoString();
             PlayLevelButton.gameObject.SetActive(true);
         }
+        else if (GameManager.PlayerSaveData.IsLevelLocked(level, out PlayerSaveData.PrereqStats stats))
+        {
+            textBox.text =
+                level.LevelName + "\n" +
+                "LOCKED";
+
+            if (!stats.scoreSufficient)
+            {
+                Debug.Log(level.LevelName + " insufficient minScore!");
+                textBox.text = textBox.text + "\n" +
+                    "You require " + (5).ToString() + " more points.";
+            }
+
+            for (int i = 0; i < stats.levelSufficient.Length; i++)
+            {
+                if (!stats.levelSufficient[i])
+                {
+                    textBox.text = textBox.text + "\n" +
+                        level.prereqs.requiredLevels[i].LevelName + " has not been completed.";
+                }
+            }
+
+            PlayLevelButton.gameObject.SetActive(false);
+        }
         else
         {
-            textBox.text = 
-                "Level Info: " + level.LevelName + 
+            textBox.text =
+                level.LevelName + "\n" +
                 "No completed succesfful run.";
             // This is also where'd I'd like to add a lock icon as greying out of the play button and menu
 
-
-            PlayLevelButton.gameObject.SetActive(false);
-
+            PlayLevelButton.gameObject.SetActive(true);
             Debug.Log("No completed successful run");
         }
-        
-        
-
-            
-
     }
 
     public void Deactivate()
