@@ -15,7 +15,7 @@ public class MainMenuManager : MonoBehaviour
 
     public enum Menu
     {
-        MainMenu, LevelMenu, SettingsMenu,
+        MainMenu, LevelMenu, GuideMenu, SettingsMenu,
         Chapter1, Chapter2, Chapter3, Chapter4,
         Previous
     }
@@ -82,10 +82,9 @@ public class MainMenuManager : MonoBehaviour
         PlayLevelInfo.gameObject.SetActive(false);
     }
 
-
     public void QuitGameButton()
     {
-
+        Application.Quit();
     }
 
     public void ActivatePlayLevelInfo(Level level)
@@ -97,7 +96,6 @@ public class MainMenuManager : MonoBehaviour
     {
         GameManager.SetLevel(level);
         SceneManager.LoadScene("Scenes/PlayScene", LoadSceneMode.Single);
-            
     }
 
 }

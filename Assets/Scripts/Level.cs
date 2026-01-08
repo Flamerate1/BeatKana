@@ -31,13 +31,15 @@ public class Level : ScriptableObject
         public int BPM;
         public float BeatDistance;
         public float maxBeatError;
-        public bool showKana;
-        public DifficultyFields(int BPM, float BeatDistance, float maxBeatError, bool showKana)
+        public bool hideKana;
+        public bool mute;
+        public DifficultyFields(int BPM, float BeatDistance, float maxBeatError, bool hideKana, bool mute)
         {
-             this.BPM = BPM;
-             this.BeatDistance = BeatDistance;
-             this.maxBeatError =maxBeatError;
-             this.showKana = showKana;
+            this.BPM = BPM;
+            this.BeatDistance = BeatDistance;
+            this.maxBeatError =maxBeatError;
+            this.hideKana = hideKana;
+            this.mute = mute;
         }
     }
     [Serializable]
@@ -74,7 +76,7 @@ public class Level : ScriptableObject
     // Used as an ID to make sure that where ever a level is being loaded (the button, the level, etc), it can also use the proper saved data there. 
     public string LevelName = string.Empty; // Technically also an ID
     public LevelType levelType = LevelType.Beat; 
-    public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, true); 
+    public DifficultyFields difficulty = new DifficultyFields(60, 1.0f, 0.2f, false, false); 
     public BeatElement[] beatElementsBank; // Assume in order for now. 
     public BeatCounts beatCounts = new BeatCounts(3, 1, 2); // Only valid for LevelType.Beat
     public Prereqs prereqs = new Prereqs(0, new Level[0]); // Determines which levels or score are necessary to access level

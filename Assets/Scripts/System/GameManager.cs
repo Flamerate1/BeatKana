@@ -113,9 +113,4 @@ public class GameManager : MonoBehaviour
         else { GameManager.gamePaused = false; Time.timeScale = 1.0f; }
         Debug.Log("Game paused?: " + doPause.ToString());
     }
-
-    static void LoadLevelData()
-    {
-        Level[] allLevels = Resources.LoadAll<Level>("ScriptableObjects/Levels/");
-    }
 }
