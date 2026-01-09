@@ -7,7 +7,6 @@ public class BeatTimeline : Timeline
 {
     #region Vars
 
-
     // BeatTimeline specific 
 
     float BPS; // Calculate from BPM / 60 seconds per minute;
@@ -18,7 +17,8 @@ public class BeatTimeline : Timeline
     bool canStopRecognition = false; // Enables single flip of duringKeyRecognition to false at end of input period.  
     bool duringKeyRecognition = false; // true during the moments when the player can input for the letter and score. 
     bool scoredSuccessfully = false; // resets during each input period. 
-    
+    AudioClip tickAudioClip; // Metronome sound effect. 
+    AudioSource AudioSource;
     #endregion
 
     #region Start(), LoadTimeline(), GenerateBeatListSequential() & MakeBeats()
@@ -42,6 +42,9 @@ public class BeatTimeline : Timeline
         SummaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
         SummaryScreen.gameObject.SetActive(false);
         FeedbackGraphic.gameObject.SetActive(false);
+
+        AudioSource = GetComponent<AudioSource>();
+        tickAudioClip = Resources.Load<AudioClip>("Synth_Tick_A_hi");
 
         LoadTimeline();
     }
@@ -91,6 +94,7 @@ public class BeatTimeline : Timeline
         beatObjects = MakeBeats(beatList);
         isLevelLoaded = true;
         GameManager.PauseGame(false);
+        NewBeat();
     }
 
     // this method creates the beat class instances in a list in sequential order that they were created in the array
@@ -141,11 +145,16 @@ public class BeatTimeline : Timeline
         if (!base.CheckBeatGuards(text)) { return; }
 
         // Punish player if inputted during wrong moments
-        if ((!duringKeyRecognition || // Quit if can't score now.
+        if ((tlState != TLState.Input || // Quit if can't score now.
             scoredSuccessfully || // Don't search any longer if scored already.
             currentBeat.text == string.Empty) && // Don't search if currently an empty beat
             text != string.Empty
             )
+        /*if ((!duringKeyRecognition || // Quit if can't score now.
+            scoredSuccessfully || // Don't search any longer if scored already.
+            currentBeat.text == string.Empty) && // Don't search if currently an empty beat
+            text != string.Empty
+            )*/
         { 
             Debug.Log("Can't input. Wrong time!");
             // punish player code
@@ -185,6 +194,44 @@ public class BeatTimeline : Timeline
         }
     }
 
+
+    enum TLState { Before, Input, After }
+    [SerializeField] TLState tlState = TLState.Before;
+    void NewBeat()
+    {
+        previousBeatIndex = currentBeatIndex;
+
+        currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
+        // Update Visuals based on current Beat class
+        if (currentBeatIndex < beatList.Count)
+        {
+            currentKanaTMP.text = beatList[currentBeatIndex].text;
+            currentWordTMP.text = beatList[currentBeatIndex].word;
+        }
+        else
+        {
+            currentKanaTMP.text = string.Empty;
+            currentWordTMP.text = string.Empty;
+        }
+    }
+    void InputStart()
+    {
+
+    }
+    void InputEnd()
+    {
+        if (currentBeat.text != string.Empty &&
+                !scoredSuccessfully)
+        {
+            FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
+        }
+
+        scoredSuccessfully = false;
+
+        //inputField.text = string.Empty;
+        InputString.ResetString();
+    }
+
     void Update()
     {
         if (!base.UpdateGuards()) return;
@@ -192,11 +239,39 @@ public class BeatTimeline : Timeline
         currentBeatIndex = Mathf.FloorToInt(beatTime);  // time as discrete int
         if (currentBeatIndex >= beatList.Count) { LevelEnd(true); return; } // End level when beat index hits end of beatList count
 
-        currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
+        //currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
         aroundBeatApex = (beatTime - currentBeatIndex) - 0.5f; // Amount of time between now and the apex of the current beat. 
 
         levelProgress = beatTime / beatList.Count;
 
+        // Use beatTime, currentBeatIndex, and aroundBeatApex to compute beat states. 
+        switch (tlState)
+        {
+            case TLState.Before:
+                if (aroundBeatApex >= -maxBeatError)
+                {
+                    InputStart();
+                    tlState = TLState.Input;
+                }
+                break;
+            case TLState.Input:
+                if (aroundBeatApex >= maxBeatError)
+                {
+                    InputEnd();
+                    tlState = TLState.After;
+                }
+                break;
+            case TLState.After:
+                if (currentBeatIndex != previousBeatIndex)
+                {
+                    NewBeat();
+                    tlState = TLState.Before;
+                }
+                break;
+        }
+
+        /*
+        // transition to new beat
         if (currentBeatIndex != previousBeatIndex)
         {
             // Code to switch text, image, etc about beat
@@ -217,12 +292,14 @@ public class BeatTimeline : Timeline
             }
         }
 
+        // Transition to input state
         if (canStartRecognition && aroundBeatApex >= -maxBeatError)
         {
             canStartRecognition = false;
             duringKeyRecognition = true;
         }
 
+        // Transition to non input state
         if (canStopRecognition && aroundBeatApex >= maxBeatError)
         {
             if (currentBeat.text != string.Empty &&
@@ -238,7 +315,9 @@ public class BeatTimeline : Timeline
 
             //inputField.text = string.Empty;
             InputString.ResetString();
-        }
+        }*/
+
+        
 
         float TimelinePos = beatTime * BeatDistance;
         var pos = Vector3.right * (-TimelinePos);
