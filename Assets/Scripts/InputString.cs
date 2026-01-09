@@ -9,7 +9,7 @@ public class InputString : MonoBehaviour
 
     TMP_Text tmpText;
 
-    public void Initialize()
+    public void Init()
     {
         tmpText = GetComponent<TMP_Text>();
     }

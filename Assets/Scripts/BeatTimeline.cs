@@ -13,37 +13,48 @@ public class BeatTimeline : Timeline
     int previousBeatIndex = 0; // Used to play code at every beat increment.
     float beatTime = 0f; // Accumulated actual time that has passed
     float aroundBeatApex = 0f; // time between now and the actual current beat point.
-    bool canStartRecognition = false; // Enables single flip of duringKeyRecognition to true at start of input period. 
-    bool canStopRecognition = false; // Enables single flip of duringKeyRecognition to false at end of input period.  
-    bool duringKeyRecognition = false; // true during the moments when the player can input for the letter and score. 
-    bool scoredSuccessfully = false; // resets during each input period. 
     AudioClip tickAudioClip; // Metronome sound effect. 
-    AudioSource AudioSource;
+    bool CanPlayTick = true;
+    float tickPoint; // Time in beatTime when tick sound is played. 
+
+    float health = 1f;
+    void AddHealth(float value) 
+    {
+        health += value;
+        health = Mathf.Clamp(health, 0f, 1f);
+        if (health <= 0f)
+            LevelEnd(false);
+    }
+
+    LineRenderer healthBar;
     #endregion
 
     #region Start(), LoadTimeline(), GenerateBeatListSequential() & MakeBeats()
     public override void PlayManagerSetFields(PlayManager.TLFields tlFields)
     {
         this.progressBar = tlFields.progressBar;
+        this.healthBar = tlFields.timeRemainingBar;
         this.InputString = tlFields.InputString;
         this.SummaryScreen = tlFields.SummaryScreen;
         this.FeedbackGraphic = tlFields.FeedbackGraphic;
+        this.AudioSource = tlFields.AudioSource;
         this.currentWordTMP = tlFields.currentWordTMP;
         this.currentKanaTMP = tlFields.currentKanaTMP;
         this.scoreDisplay = tlFields.scoreDisplay;
     }
     public override void StartGame()
     {
-        InputString.Initialize();
+        InputString.Init();
         InputString.UpdateStringEvent += CheckBeat;
         InputString.ResetString();
         currentKanaTMP.text = string.Empty;
         currentWordTMP.text = string.Empty;
-        SummaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
+        SummaryScreen.Init(); // Just sets its child to inactive and gets itself ready for activation
         SummaryScreen.gameObject.SetActive(false);
+        FeedbackGraphic.Init();
         FeedbackGraphic.gameObject.SetActive(false);
 
-        AudioSource = GetComponent<AudioSource>();
+        //AudioSource = GetComponent<AudioSource>();
         tickAudioClip = Resources.Load<AudioClip>("Synth_Tick_A_hi");
 
         LoadTimeline();
@@ -78,6 +89,7 @@ public class BeatTimeline : Timeline
 
         // BPM based on level data
         BPS = 60f / BPM;
+        tickPoint = -(tickAudioClip.length / BPS) / 2f;
 
         // Load beatLine
         beatLine = Resources.Load<GameObject>("BeatLine");
@@ -146,7 +158,7 @@ public class BeatTimeline : Timeline
 
         // Punish player if inputted during wrong moments
         if ((tlState != TLState.Input || // Quit if can't score now.
-            scoredSuccessfully || // Don't search any longer if scored already.
+            //scoredSuccessfully || // Don't search any longer if scored already.
             currentBeat.text == string.Empty) && // Don't search if currently an empty beat
             text != string.Empty
             )
@@ -159,6 +171,7 @@ public class BeatTimeline : Timeline
             Debug.Log("Can't input. Wrong time!");
             // punish player code
             totalPoints -= 20;
+            AddHealth(-0.2f);
 
             // Update ScoreDisplay
             scoreDisplay.text = "Score: " + totalPoints.ToString();
@@ -173,24 +186,26 @@ public class BeatTimeline : Timeline
         // Correct Input
         if (text.Contains(currentBeat.text)) // if text match
         {
-            scoredSuccessfully = true;
+            //scoredSuccessfully = true;
             //inputField.text = string.Empty;
             InputString.ResetString();
             float accuracy = 1f - (Mathf.Abs(aroundBeatApex) / maxBeatError); // Accuracy depending on distance to beat. 
             float round = Mathf.Floor(accuracy * 100f) / 100f; // reduce to 2 decimal places
             accuracy = Mathf.Clamp01(round); // Clamp between 0 and 1
 
-            var points = 20 + Mathf.RoundToInt(accuracy * 100f);
+            var points = Mathf.RoundToInt(accuracy * 100f);
             Debug.Log("Scored: " + points.ToString());
 
             // Add to total score. 
             totalPoints += points;
+            AddHealth(accuracy * 0.1f);
 
             // Update ScoreDisplay
             scoreDisplay.text = "Score: " + totalPoints.ToString();
 
             // Categorize Score, then InitiateFeedback for graphic. 
             FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Perfect);
+            tlState = TLState.After;
         }
     }
 
@@ -202,11 +217,19 @@ public class BeatTimeline : Timeline
         previousBeatIndex = currentBeatIndex;
 
         currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
+
         // Update Visuals based on current Beat class
         if (currentBeatIndex < beatList.Count)
         {
+            if (currentBeat.text == string.Empty)
+            {
+                tlState = TLState.After;
+            }
             currentKanaTMP.text = beatList[currentBeatIndex].text;
             currentWordTMP.text = beatList[currentBeatIndex].word;
+
+            // Play Sound
+            AudioSource.PlayOneShot(currentBeat.clip);
         }
         else
         {
@@ -218,17 +241,12 @@ public class BeatTimeline : Timeline
     {
 
     }
-    void InputEnd()
+    void InputMiss()
     {
-        if (currentBeat.text != string.Empty &&
-                !scoredSuccessfully)
-        {
-            FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
-        }
+        FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
 
-        scoredSuccessfully = false;
+        AddHealth(-0.2f);
 
-        //inputField.text = string.Empty;
         InputString.ResetString();
     }
 
@@ -244,78 +262,42 @@ public class BeatTimeline : Timeline
 
         levelProgress = beatTime / beatList.Count;
 
+        //float _tickPoint = -(tickAudioClip.length / 2f);
+        if (CanPlayTick && aroundBeatApex >= tickPoint)
+        {
+            // Play Sound
+            AudioSource.PlayOneShot(tickAudioClip);
+            Debug.Log(tickAudioClip.length.ToString());
+            //Debug.Log(tickAudioClip.);
+            CanPlayTick = false;
+        } else if (aroundBeatApex < tickPoint) { CanPlayTick = true; }
+
         // Use beatTime, currentBeatIndex, and aroundBeatApex to compute beat states. 
         switch (tlState)
         {
             case TLState.Before:
                 if (aroundBeatApex >= -maxBeatError)
                 {
-                    InputStart();
                     tlState = TLState.Input;
+                    InputStart();
                 }
                 break;
             case TLState.Input:
                 if (aroundBeatApex >= maxBeatError)
                 {
-                    InputEnd();
                     tlState = TLState.After;
+                    InputMiss();
                 }
                 break;
             case TLState.After:
                 if (currentBeatIndex != previousBeatIndex)
                 {
-                    NewBeat();
                     tlState = TLState.Before;
+                    //CanPlayTick = true;
+                    NewBeat();
                 }
                 break;
         }
-
-        /*
-        // transition to new beat
-        if (currentBeatIndex != previousBeatIndex)
-        {
-            // Code to switch text, image, etc about beat
-            previousBeatIndex = currentBeatIndex;
-            canStartRecognition = true;
-            canStopRecognition = true;
-
-            // Update Visuals based on current Beat class
-            if (currentBeatIndex < beatList.Count)
-            {
-                currentKanaTMP.text = beatList[currentBeatIndex].text;
-                currentWordTMP.text = beatList[currentBeatIndex].word;
-            }
-            else
-            {
-                currentKanaTMP.text = string.Empty;
-                currentWordTMP.text = string.Empty;
-            }
-        }
-
-        // Transition to input state
-        if (canStartRecognition && aroundBeatApex >= -maxBeatError)
-        {
-            canStartRecognition = false;
-            duringKeyRecognition = true;
-        }
-
-        // Transition to non input state
-        if (canStopRecognition && aroundBeatApex >= maxBeatError)
-        {
-            if (currentBeat.text != string.Empty &&
-                !scoredSuccessfully)
-            {
-                FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.Miss);
-            }
-
-            canStopRecognition = false;
-            duringKeyRecognition = false;
-
-            scoredSuccessfully = false;
-
-            //inputField.text = string.Empty;
-            InputString.ResetString();
-        }*/
 
         
 
@@ -332,6 +314,19 @@ public class BeatTimeline : Timeline
         var progress_rel_x = (cam_right - cam_left) * levelProgress;
         progressBarPos.x = progress_rel_x + cam_left;
         progressBar.SetPosition(1, progressBarPos);
+
+        // Update timeRemaining bar
+        var healthBarPos = healthBar.GetPosition(1);
+        // Reuse cam_left and cam_right
+
+        //var relTime = health;
+        var time_rel_x = (cam_right - cam_left) * health;
+        healthBarPos.x = time_rel_x + cam_left;
+        healthBar.SetPosition(1, healthBarPos);
+
+        Color barColor = Color.Lerp(Color.red, Color.green, health);
+        healthBar.startColor = barColor;
+        healthBar.endColor = barColor;
     }
     #endregion
 }

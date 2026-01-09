@@ -15,10 +15,11 @@ MonoBehaviour:
   LevelName: TESTING
   levelType: 0
   difficulty:
-    BPM: 20
-    BeatDistance: 3
+    BPM: 35
+    BeatDistance: 5
     maxBeatError: 0.45
-    showKana: 1
+    hideKana: 0
+    mute: 0
   beatElementsBank:
   - {fileID: 11400000, guid: d945314c7a858a146b6d144395e0e83b, type: 2}
   - {fileID: 11400000, guid: 3ca8540dfa1605a4cb62f015b7465ce3, type: 2}
@@ -27,3 +28,6 @@ MonoBehaviour:
     levelPreBeats: 1
     betweenBeats: 1
     levelPostBeats: 1
+  prereqs:
+    minScore: 0
+    requiredLevels: []

@@ -46,6 +46,7 @@ public abstract class Timeline : MonoBehaviour
     protected TMP_Text currentKanaTMP;
     protected TMP_Text scoreDisplay;
     protected FeedbackGraphic FeedbackGraphic;
+    protected AudioSource AudioSource;
 
     protected bool CheckBeatGuards(string text)
     {

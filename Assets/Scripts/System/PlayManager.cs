@@ -20,6 +20,7 @@ public class PlayManager : MonoBehaviour
         public InputString InputString;
         public SummaryScreen SummaryScreen;
         public FeedbackGraphic FeedbackGraphic;
+        public AudioSource AudioSource;
         public TMP_Text currentWordTMP;
         public TMP_Text currentKanaTMP;
         public TMP_Text scoreDisplay;
@@ -35,6 +36,8 @@ public class PlayManager : MonoBehaviour
     Timeline Timeline;
 
     [SerializeField] KanaKeyboard KanaKeyboard;
+
+    [SerializeField] PauseScreen PauseScreen;
 
     private void Awake()
     {
@@ -69,12 +72,16 @@ public class PlayManager : MonoBehaviour
 
         KanaKeyboard.PlayManagerSetFields(tlFields);
         KanaKeyboard.Initialize();
+
+        PauseScreen.Init();
+        PauseScreen.gameObject.SetActive(false);
     }
 
     public void PauseGame() { PauseGame(!GameManager.gamePaused); }
     public void PauseGame(bool doPause)
     {
         GameManager.PauseGame(doPause);
-        tlFields.SummaryScreen.Pause(doPause);
+        //tlFields.SummaryScreen.Pause(doPause);
+        PauseScreen.Pause(doPause);
     }
 }

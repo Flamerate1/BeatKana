@@ -12,7 +12,7 @@ public class QueueTimeline : Timeline
     float timeMultiplier = 1f;
     float maxTimeRemaining = 2f;
 
-    protected LineRenderer timeRemainingBar; // Bar that displays time left for a beat in Queue
+    LineRenderer timeRemainingBar; // Bar that displays time left for a beat in Queue
 
     #endregion
 
@@ -24,19 +24,21 @@ public class QueueTimeline : Timeline
         this.InputString = tlFields.InputString;
         this.SummaryScreen = tlFields.SummaryScreen;
         this.FeedbackGraphic = tlFields.FeedbackGraphic;
+        this.AudioSource = tlFields.AudioSource;
         this.currentWordTMP = tlFields.currentWordTMP;
         this.currentKanaTMP = tlFields.currentKanaTMP;
         this.scoreDisplay = tlFields.scoreDisplay;
     }
     public override void StartGame()
     {
-        InputString.Initialize();
+        InputString.Init();
         InputString.UpdateStringEvent += CheckBeat;
         InputString.ResetString();
         currentKanaTMP.text = string.Empty;
         currentWordTMP.text = string.Empty;
-        SummaryScreen.Initialize(); // Just sets its child to inactive and gets itself ready for activation
+        SummaryScreen.Init(); // Just sets its child to inactive and gets itself ready for activation
         SummaryScreen.gameObject.SetActive(false);
+        FeedbackGraphic.Init();
         FeedbackGraphic.gameObject.SetActive(false);
 
         LoadTimeline();
@@ -163,18 +165,6 @@ public class QueueTimeline : Timeline
 
             AdvanceToNextBeat();
         }
-        /*else if (text.Length > currentBeat.text.Length) // Punish player for incorrect input
-        { 
-            // punish player code
-            totalPoints -= 20;
-
-            // Update ScoreDisplay
-            scoreDisplay.text = "Score: " + totalPoints.ToString();
-
-            FeedbackGraphic.InitiateFeedback(FeedbackGraphic.Degree.WrongTime);
-
-            InputString.ResetString();
-        }*/
     }
 
     bool CheckEnd() { if (currentBeatIndex >= beatList.Count) { LevelEnd(true); return true; } return false; }
@@ -193,6 +183,9 @@ public class QueueTimeline : Timeline
 
         levelProgress = (float)currentBeatIndex / beatList.Count;
         currentBeat = beatList[currentBeatIndex];
+
+        // Play Sound
+        AudioSource.PlayOneShot(currentBeat.clip);
 
         InputString.ResetString();
     }
@@ -233,6 +226,9 @@ public class QueueTimeline : Timeline
         timeBarPos.x = time_rel_x + cam_left;
         timeRemainingBar.SetPosition(1, timeBarPos);
 
+        Color barColor = Color.Lerp(Color.red, Color.green, relTime);
+        timeRemainingBar.startColor = barColor;
+        timeRemainingBar.endColor = barColor;
     }
     #endregion
 }

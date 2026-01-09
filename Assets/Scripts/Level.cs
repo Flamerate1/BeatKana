@@ -83,6 +83,16 @@ public class Level : ScriptableObject
 
     
 
+    public void GetLevelData(
+        ref DifficultyFields difficulty,
+        ref BeatElement[] beatElementsBank,
+        ref BeatCounts beatCounts
+        )
+    {
+        difficulty = this.difficulty;
+        beatElementsBank = this.beatElementsBank;
+        beatCounts = this.beatCounts;
+    }
 
     // method WITHOUT Level Name
     public void GetLevelData(
