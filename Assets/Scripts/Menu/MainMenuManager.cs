@@ -69,6 +69,9 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
+        // Save PlayerPrefs when exiting SettingsMenu
+        if (currentMenu == Menu.SettingsMenu) { PlayerPrefs.Save(); Debug.Log("PlayerPrefs saved!"); } 
+        
         previousMenu = currentMenu;
         currentMenu = menu;
 

@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayManager : MonoBehaviour
 {
@@ -20,7 +21,6 @@ public class PlayManager : MonoBehaviour
         public InputString InputString;
         public SummaryScreen SummaryScreen;
         public FeedbackGraphic FeedbackGraphic;
-        public AudioSource AudioSource;
         public TMP_Text currentWordTMP;
         public TMP_Text currentKanaTMP;
         public TMP_Text scoreDisplay;
@@ -56,23 +56,20 @@ public class PlayManager : MonoBehaviour
             case Level.LevelType.Beat:
                 Timeline = BeatTimeline;
                 Destroy(QueueTimeline.gameObject);
-                //QueueTimeline.gameObject.SetActive(false);
                 break;
 
             case Level.LevelType.Queue:
                 Timeline = QueueTimeline;
                 Destroy(BeatTimeline.gameObject);
-                //Timeline.gameObject.SetActive(false);
                 break;
         }
 
-        // Initialize
         Timeline.PlayManagerSetFields(tlFields);
         Timeline.StartGame();
 
         KanaKeyboard.PlayManagerSetFields(tlFields);
         KanaKeyboard.Initialize();
-
+        
         PauseScreen.Init();
         PauseScreen.gameObject.SetActive(false);
     }

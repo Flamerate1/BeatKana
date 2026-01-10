@@ -24,13 +24,14 @@ public class QueueTimeline : Timeline
         this.InputString = tlFields.InputString;
         this.SummaryScreen = tlFields.SummaryScreen;
         this.FeedbackGraphic = tlFields.FeedbackGraphic;
-        this.AudioSource = tlFields.AudioSource;
         this.currentWordTMP = tlFields.currentWordTMP;
         this.currentKanaTMP = tlFields.currentKanaTMP;
         this.scoreDisplay = tlFields.scoreDisplay;
     }
     public override void StartGame()
     {
+        AudioManager = GameManager.AudioManager;
+
         InputString.Init();
         InputString.UpdateStringEvent += CheckBeat;
         InputString.ResetString();
@@ -185,7 +186,7 @@ public class QueueTimeline : Timeline
         currentBeat = beatList[currentBeatIndex];
 
         // Play Sound
-        AudioSource.PlayOneShot(currentBeat.clip);
+        AudioManager.PlayOneShot(AudioManager.Source.Kana, currentBeat.clip);
 
         InputString.ResetString();
     }

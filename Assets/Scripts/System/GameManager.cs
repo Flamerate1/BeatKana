@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     private static string saveDataPath; // 
     public static PlayerSaveData PlayerSaveData; // Stores level progression, currencies, etc
+    public static AudioManager AudioManager;
 
     private void Awake()
     {
@@ -47,6 +48,8 @@ public class GameManager : MonoBehaviour
 
         saveDataPath = Path.Combine(Application.persistentDataPath, "save.json");
         PlayerSaveData = PlayerSaveData.LoadFromJson(saveDataPath);
+        AudioManager = GetComponent<AudioManager>();
+        AudioManager.Init();
 
         Level.LoadLevelData();
     }

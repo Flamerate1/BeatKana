@@ -37,13 +37,14 @@ public class BeatTimeline : Timeline
         this.InputString = tlFields.InputString;
         this.SummaryScreen = tlFields.SummaryScreen;
         this.FeedbackGraphic = tlFields.FeedbackGraphic;
-        this.AudioSource = tlFields.AudioSource;
         this.currentWordTMP = tlFields.currentWordTMP;
         this.currentKanaTMP = tlFields.currentKanaTMP;
         this.scoreDisplay = tlFields.scoreDisplay;
     }
     public override void StartGame()
     {
+        AudioManager = GameManager.AudioManager;
+
         InputString.Init();
         InputString.UpdateStringEvent += CheckBeat;
         InputString.ResetString();
@@ -229,7 +230,10 @@ public class BeatTimeline : Timeline
             currentWordTMP.text = beatList[currentBeatIndex].word;
 
             // Play Sound
-            AudioSource.PlayOneShot(currentBeat.clip);
+            if (currentBeat.clip != null)
+            {
+                AudioManager.PlayOneShot(AudioManager.Source.Kana, currentBeat.clip);
+            }
         }
         else
         {
@@ -266,9 +270,10 @@ public class BeatTimeline : Timeline
         if (CanPlayTick && aroundBeatApex >= tickPoint)
         {
             // Play Sound
-            AudioSource.PlayOneShot(tickAudioClip);
+            AudioManager.PlayTick();
+            //AudioSource.PlayOneShot(tickAudioClip);
             Debug.Log(tickAudioClip.length.ToString());
-            //Debug.Log(tickAudioClip.);
+
             CanPlayTick = false;
         } else if (aroundBeatApex < tickPoint) { CanPlayTick = true; }
 
