@@ -30,8 +30,6 @@ public class QueueTimeline : Timeline
     }
     public override void StartGame()
     {
-        AudioManager = GameManager.AudioManager;
-
         InputString.Init();
         InputString.UpdateStringEvent += CheckBeat;
         InputString.ResetString();
@@ -186,7 +184,7 @@ public class QueueTimeline : Timeline
         currentBeat = beatList[currentBeatIndex];
 
         // Play Sound
-        AudioManager.PlayOneShot(AudioManager.Source.Kana, currentBeat.clip);
+        GameManager.AudioManager.PlayOneShot(AudioManager.Source.Kana, currentBeat.clip);
 
         InputString.ResetString();
     }

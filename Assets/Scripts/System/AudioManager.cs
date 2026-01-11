@@ -2,17 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
 
 public class AudioManager : MonoBehaviour
 {
+
     [SerializeField] AudioMixer AudioMixer;
 
     public enum Source { Master, Tick, Kana }
 
     [Serializable]
-    public struct AudioChannel
+    public class AudioChannel
     {
         public AudioChannel(Source source, string name, AudioSource audioSource)
         {
@@ -25,11 +24,12 @@ public class AudioManager : MonoBehaviour
         public AudioSource audioSource;
     }
     [SerializeField] AudioChannel[] channels = new AudioChannel[3];
-    Dictionary<Source, AudioChannel> sources = new Dictionary<Source, AudioChannel>();
+    Dictionary<Source, AudioChannel> sources;
 
     public AudioClip tickClip;
     public void Init()
     {
+        sources = new Dictionary<Source, AudioChannel>();
 
         tickClip = Resources.Load<AudioClip>("Synth_Tick_A_hi");
         foreach (AudioChannel channel in channels)

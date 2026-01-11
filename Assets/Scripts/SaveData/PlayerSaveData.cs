@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 [System.Serializable]
 public class PlayerSaveData
 {
     // internal use
+    public const int CURRENT_SAVE_VERSION = 0;
     private string filePath; public void SetFilePath(string filePath) { this.filePath = filePath; }
+    private bool isDirty = false;
+
 
     // Save Data
-
     [SerializeField] string playerSaveId; 
     [SerializeField] int saveVersion; // Initialized in constructor: increment when notable changes are made. 
     [SerializeField] List<LevelSaveData> bestLevelData; // Save to json. List of best level records
@@ -22,7 +25,7 @@ public class PlayerSaveData
     public PlayerSaveData() // constructor
     {
         playerSaveId = Guid.NewGuid().ToString();
-        saveVersion = 0; // increment when notable changes are made after release
+        saveVersion = CURRENT_SAVE_VERSION; // increment when notable changes are made after release
         bestLevelData = new List<LevelSaveData>();
         LevelSaveData_Dictionary = new Dictionary<string, LevelSaveData>();
     } // constructor
@@ -44,6 +47,7 @@ public class PlayerSaveData
 
     public void RecordLevelResult(LevelCompletionRecord levelCompletionRecord)
     {
+        isDirty = true;
         // Add level to dictionary. If failed, then don't save to best list. 
         this.completionRecordData.Add(levelCompletionRecord);
         if (!levelCompletionRecord.completed) return; // No need to add to LevelSaveData_List
@@ -71,6 +75,7 @@ public class PlayerSaveData
 
     public void UpdateBestLevelData()
     {
+
         bestLevelData.Clear();
         //foreach (LevelSaveData levelSaveData in LevelSaveData_Dictionary)
         foreach (KeyValuePair<string, LevelSaveData> pair in LevelSaveData_Dictionary)
@@ -131,11 +136,16 @@ public class PlayerSaveData
     #region Saving and Loading
     public void SaveToJson()
     {
+        // Dirty Flag Check. Don't save if changes haven't been made. 
+        if (!isDirty) return;
+
         // Grab PlayerSaveData from GameManager and put it into json to place into a save file. 
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(this.filePath, json);
         Debug.Log(json);
         Debug.Log("Saved to: " + this.filePath);
+
+        isDirty = false;
     }
 
     public static PlayerSaveData LoadFromJson(string filePath)
@@ -144,9 +154,21 @@ public class PlayerSaveData
         {
             string json = File.ReadAllText(filePath);
             Debug.Log(json);
+
+            // Code to upgrade save file 
+            SaveHeader header = JsonUtility.FromJson<SaveHeader>(json);
+            if (header.saveVersion < CURRENT_SAVE_VERSION)
+            {
+                json = UpgradeSave(json, header.saveVersion);
+            }
+            // Save file done upgrading
+
             PlayerSaveData loaded = JsonUtility.FromJson<PlayerSaveData>(json);
+            Debug.Log("PlayerID: " + loaded.playerSaveId.ToString() + "\n" +
+                "SaveVersion: " + loaded.saveVersion.ToString());
             loaded.InitLevelDataDictionary();
             loaded.SetFilePath(filePath);
+
             
             int count = loaded.completionRecordData.Count;
             int nextId = loaded.completionRecordData[count-1].id;
@@ -161,7 +183,74 @@ public class PlayerSaveData
             playeSaveData.SetFilePath(filePath);
             return playeSaveData;
         }
+    }
 
+    public static string UpgradeSave(string json, int saveVersion)
+    {
+        /* ADD CODE WHEN NECESSARY FOR SAVE UPGRADE
+        while (saveVersion < CURRENT_SAVE_VERSION)
+        {
+            switch (saveVersion)
+            {
+                case 0:
+                    json = UpgradeV0ToV1(json);
+                    break;
+                case 1:
+                    json = UpgradeV1ToV2(json);
+                    break;
+                case 2:
+                    json = UpgradeV2ToV3(json);
+                    break; 
+            }
+
+            saveVersion++;
+        }*/
+
+        return json;
+    }
+    public static string UpgradeV0ToV1(string json)
+    {
+        SaveV0 old = JsonUtility.FromJson<SaveV0>(json);
+
+        SaveV1 upgraded = new SaveV1
+        {
+            saveVersion = 1
+
+            // Place old variables into new variables. 
+            //health = old.health,
+            
+            // Create new defaults. 
+            //maxHealth = 100
+        };
+
+        return JsonUtility.ToJson(upgraded);
     }
     #endregion
 }
+
+[System.Serializable] 
+public class SaveHeader
+{
+    public int saveVersion = 0;
+}
+
+[System.Serializable] 
+public class SaveV0
+{
+    public int saveVersion = 0;
+
+    /*
+    Add the appropriate fields for this versions save file. 
+    */
+}
+
+[System.Serializable] 
+public class SaveV1
+{
+    public int saveVersion = 0;
+
+    /*
+    Add the appropriate fields for this versions save file. 
+    */
+}
+

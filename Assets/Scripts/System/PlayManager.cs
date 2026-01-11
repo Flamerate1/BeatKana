@@ -1,13 +1,13 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class PlayManager : MonoBehaviour
 {
     [Serializable]
     public struct GMFields // GameManager Fields
     {
+        public AudioManager AudioManager;
         public Camera Camera;
         public RectTransform canvasRectTransform;
         public RectTransform timelineCameraPosition;
@@ -39,7 +39,7 @@ public class PlayManager : MonoBehaviour
 
     [SerializeField] PauseScreen PauseScreen;
 
-    private void Awake()
+    private void Start()
     {
         // Initialize GameManager
         GameManager.PlayManagerSetFields(gmFields); 

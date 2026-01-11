@@ -43,8 +43,6 @@ public class BeatTimeline : Timeline
     }
     public override void StartGame()
     {
-        AudioManager = GameManager.AudioManager;
-
         InputString.Init();
         InputString.UpdateStringEvent += CheckBeat;
         InputString.ResetString();
@@ -55,7 +53,6 @@ public class BeatTimeline : Timeline
         FeedbackGraphic.Init();
         FeedbackGraphic.gameObject.SetActive(false);
 
-        //AudioSource = GetComponent<AudioSource>();
         tickAudioClip = Resources.Load<AudioClip>("Synth_Tick_A_hi");
 
         LoadTimeline();
@@ -232,7 +229,7 @@ public class BeatTimeline : Timeline
             // Play Sound
             if (currentBeat.clip != null)
             {
-                AudioManager.PlayOneShot(AudioManager.Source.Kana, currentBeat.clip);
+                GameManager.AudioManager.PlayOneShot(AudioManager.Source.Kana, currentBeat.clip);
             }
         }
         else
@@ -261,7 +258,6 @@ public class BeatTimeline : Timeline
         currentBeatIndex = Mathf.FloorToInt(beatTime);  // time as discrete int
         if (currentBeatIndex >= beatList.Count) { LevelEnd(true); return; } // End level when beat index hits end of beatList count
 
-        //currentBeat = beatList[currentBeatIndex]; // The actual current Beat class instance being focused on in the current beat window
         aroundBeatApex = (beatTime - currentBeatIndex) - 0.5f; // Amount of time between now and the apex of the current beat. 
 
         levelProgress = beatTime / beatList.Count;
@@ -270,8 +266,7 @@ public class BeatTimeline : Timeline
         if (CanPlayTick && aroundBeatApex >= tickPoint)
         {
             // Play Sound
-            AudioManager.PlayTick();
-            //AudioSource.PlayOneShot(tickAudioClip);
+            GameManager.AudioManager.PlayTick();
             Debug.Log(tickAudioClip.length.ToString());
 
             CanPlayTick = false;

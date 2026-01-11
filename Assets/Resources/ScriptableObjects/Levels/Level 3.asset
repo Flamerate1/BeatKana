@@ -18,13 +18,12 @@ MonoBehaviour:
     BPM: 60
     BeatDistance: 1
     maxBeatError: 0.2
-    showKana: 1
+    hideKana: 0
+    mute: 0
   beatElementsBank:
-  - {fileID: 11400000, guid: 22b0dd4a28fed7942a7d5ce2876414f2, type: 2}
+  - {fileID: 11400000, guid: b6f0ba23190959547aa05ee7711c6c7b, type: 2}
   - {fileID: 11400000, guid: f5dbbf75968d311459782eff4dbf4e62, type: 2}
-  - {fileID: 11400000, guid: 61af283dc42f11448991adf672ef9a5e, type: 2}
-  - {fileID: 11400000, guid: 138dc70300e13ec4a903d06b308d2384, type: 2}
-  - {fileID: 11400000, guid: 93c3f6c211bd593418ff1137d254050b, type: 2}
+  - {fileID: 11400000, guid: 542b3bc2d0f389d45941dbd778964134, type: 2}
   beatCounts:
     levelPreBeats: 3
     betweenBeats: 1

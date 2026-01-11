@@ -47,9 +47,6 @@ public abstract class Timeline : MonoBehaviour
     protected TMP_Text scoreDisplay;
     protected FeedbackGraphic FeedbackGraphic;
 
-    // From GameManager
-    protected AudioManager AudioManager;
-
     protected bool CheckBeatGuards(string text)
     {
         if (text == string.Empty)

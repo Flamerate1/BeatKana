@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] Vector3 mainMenuButtonPos = new Vector3(-250f, -125f);
     [SerializeField] Vector3 backMenuButtonPos = new Vector3(250f, -125f);
 
+    [SerializeField] AudioManager AudioManager;
     [SerializeField] Camera Camera;
     [SerializeField] TMP_Text totalScoreText;
 
@@ -31,11 +32,18 @@ public class MainMenuManager : MonoBehaviour
 
     private void Awake()
     {
+        GameManager.AudioManager = AudioManager;
         GameManager.cam = Camera;
     }
 
     private void Start()
     {
+        AudioManager.Init();
+        foreach (VolumeSlider slider in GetComponentsInChildren<VolumeSlider>())
+        {
+            slider.Init();
+        }
+
         PlayLevelInfo = GetComponentInChildren<PlayLevelInfo>();
         PlayLevelInfo.Initialize(this);
         PlayLevelInfo.Deactivate();

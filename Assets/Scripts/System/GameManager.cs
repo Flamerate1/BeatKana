@@ -44,18 +44,28 @@ public class GameManager : MonoBehaviour
         if (instance == null)
             instance = this;
         else
+        {
+            //Destroy(GetComponent<AudioManager>());
+            AudioSource[] sources = GetComponentsInChildren<AudioSource>();
+            foreach (AudioSource source in sources)
+            {
+                Destroy(source);
+            }
             Destroy(gameObject);
+        }
+            
 
         saveDataPath = Path.Combine(Application.persistentDataPath, "save.json");
         PlayerSaveData = PlayerSaveData.LoadFromJson(saveDataPath);
-        AudioManager = GetComponent<AudioManager>();
-        AudioManager.Init();
+        //AudioManager = GetComponent<AudioManager>();
+        //.Init();
 
         Level.LoadLevelData();
     }
 
     public static void PlayManagerSetFields(PlayManager.GMFields gmFields)
     {
+        GameManager.AudioManager = gmFields.AudioManager;
         GameManager.cam = gmFields.Camera;
         GameManager.CanvasRectTransform = gmFields.canvasRectTransform;
         GameManager.TimelineCameraPosition = gmFields.timelineCameraPosition;
@@ -63,6 +73,8 @@ public class GameManager : MonoBehaviour
     public static void InitializePlayScene()
     {
         Debug.Log("Scene is now PlayScene");
+
+        GameManager.AudioManager.Init();
         cam_z = cam.transform.position.z;
         lastHeight = 0; lastWidth = 0;
     }
