@@ -53,21 +53,18 @@ public class MainMenuManager : MonoBehaviour
 
         MenuObjects = GetComponentsInChildren<MenuObject>();
 
-        MenuObject _startMenu = MenuObjects[0];
-        currentMenu = _startMenu;
+        menuStack.Push(MenuObjects[0]);
         foreach (MenuObject menuObject in MenuObjects)
         {
             if (menuObject.Menu == Menu.MainMenu)
             {
-                _startMenu = menuObject;
+                GoToMenu(menuObject);
                 Debug.Log("Main menu MenuObject found");
                 break;
             }
         }
 
         // Instantiate
-        GoToMenu(_startMenu);
-
         totalScoreText.text = "Total Score: " +
             GameManager.PlayerSaveData.GetTotalScore().ToString();
     }
@@ -75,13 +72,13 @@ public class MainMenuManager : MonoBehaviour
     public void GoToMenu(MenuObject menuObject)
     {
         // Save PlayerPrefs when exiting SettingsMenu
-        if (currentMenu.Menu == Menu.SettingsMenu) { PlayerPrefs.Save(); Debug.Log("PlayerPrefs saved!"); }
+        if (menuStack.Peek().Menu == Menu.SettingsMenu) { PlayerPrefs.Save(); Debug.Log("PlayerPrefs saved!"); }
+        
         bool isMainMenu = menuObject.Menu == Menu.MainMenu;
         mainMenuButton.SetActive(!isMainMenu); 
         backButton.SetActive(!isMainMenu);
 
-        menuStack.Push(currentMenu);
-        currentMenu = menuObject;
+        menuStack.Push(menuObject);
 
         foreach (MenuObject menu in MenuObjects)
         {
@@ -92,8 +89,8 @@ public class MainMenuManager : MonoBehaviour
     }
     public void GoToPreviousMenu()
     {
+        menuStack.Pop(); // Get rid of current menu and use next. 
         GoToMenu(menuStack.Pop()); // Take the previous menu to go to. 
-        menuStack.Pop(); // Remove the added menu from going to the previous.
     }
 
     public void QuitGameButton()
