@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3889432312510606646}
   - component: {fileID: 13874579185693896}
   - component: {fileID: 6235922042341769908}
-  - component: {fileID: 7936093941350920540}
   m_Layer: 5
   m_Name: BackMenuButton
   m_TagString: Untagged
@@ -134,19 +133,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7936093941350920540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1070041641185686888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ac4e72dbee57fd40bdd3b9e079faece, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuGoToScript
-  menu: 7
 --- !u!1 &8342610014493655477
 GameObject:
   m_ObjectHideFlags: 0

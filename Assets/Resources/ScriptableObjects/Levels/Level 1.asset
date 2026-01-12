@@ -21,8 +21,9 @@ MonoBehaviour:
     hideKana: 0
     mute: 0
   beatElementsBank:
-  - {fileID: 11400000, guid: 1c1942260db952146ba23c09feae30bc, type: 2}
-  - {fileID: 11400000, guid: 980624504f6194140bedd337e659b6c6, type: 2}
+  - {fileID: 11400000, guid: ab352d0730039c54996d820c0c9c6219, type: 2}
+  - {fileID: 11400000, guid: 969419b9d9a786f4f8c38e596a9905cf, type: 2}
+  - {fileID: 11400000, guid: 7f789903c1da5f942bddc87b230415f1, type: 2}
   beatCounts:
     levelPreBeats: 2
     betweenBeats: 1
@@ -30,3 +31,5 @@ MonoBehaviour:
   prereqs:
     minScore: 0
     requiredLevels: []
+  Notes: "This level demonstrates the letters \u3042 and \u3044 through the word
+    \u611B meaning love. "

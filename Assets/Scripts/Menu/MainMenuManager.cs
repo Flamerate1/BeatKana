@@ -21,13 +21,16 @@ public class MainMenuManager : MonoBehaviour
         Previous
     }
 
-    MenuObject[] MenuObjects;
-    PlayLevelInfo PlayLevelInfo;
     
+    PlayLevelInfo PlayLevelInfo;
 
-    //GameObject[] menus;
-    Menu currentMenu = Menu.MainMenu;
-    Menu previousMenu;
+    MenuObject[] MenuObjects;
+    Stack<MenuObject> menuStack = new Stack<MenuObject>();
+    MenuObject currentMenu;
+
+    [SerializeField] GameObject mainMenuButton;
+    [SerializeField] GameObject backButton;
+
 
 
     private void Awake()
@@ -48,49 +51,49 @@ public class MainMenuManager : MonoBehaviour
         PlayLevelInfo.Initialize(this);
         PlayLevelInfo.Deactivate();
 
-        MenuObjects = GetComponentsInChildren<MenuObject>(); 
-        GameObject menuButtonPrefab = Resources.Load<GameObject>("MainMenuButton");
-        GameObject backButtonPrefab = Resources.Load<GameObject>("BackMenuButton");
+        MenuObjects = GetComponentsInChildren<MenuObject>();
+
+        MenuObject _startMenu = MenuObjects[0];
+        currentMenu = _startMenu;
         foreach (MenuObject menuObject in MenuObjects)
         {
-            if (menuObject.Menu != Menu.MainMenu)
+            if (menuObject.Menu == Menu.MainMenu)
             {
-                GameObject instance = Instantiate(menuButtonPrefab, mainMenuButtonPos, Quaternion.identity);
-                instance.transform.SetParent(menuObject.transform, false);
+                _startMenu = menuObject;
+                Debug.Log("Main menu MenuObject found");
+                break;
             }
         }
 
         // Instantiate
-        GoToMenuButton(Menu.MainMenu);
+        GoToMenu(_startMenu);
 
         totalScoreText.text = "Total Score: " +
             GameManager.PlayerSaveData.GetTotalScore().ToString();
     }
-
-    // The following are functions used EXCLUSIVELY by buttons!
-
-    public void GoToMenuButton(Menu menu)
+    
+    public void GoToMenu(MenuObject menuObject)
     {
-        if (menu == Menu.Previous)
-        {
-            GoToMenuButton(previousMenu);
-            return;
-        }
-
         // Save PlayerPrefs when exiting SettingsMenu
-        if (currentMenu == Menu.SettingsMenu) { PlayerPrefs.Save(); Debug.Log("PlayerPrefs saved!"); } 
-        
-        previousMenu = currentMenu;
-        currentMenu = menu;
+        if (currentMenu.Menu == Menu.SettingsMenu) { PlayerPrefs.Save(); Debug.Log("PlayerPrefs saved!"); }
+        bool isMainMenu = menuObject.Menu == Menu.MainMenu;
+        mainMenuButton.SetActive(!isMainMenu); 
+        backButton.SetActive(!isMainMenu);
 
-        foreach (MenuObject menuObject in MenuObjects)
+        menuStack.Push(currentMenu);
+        currentMenu = menuObject;
+
+        foreach (MenuObject menu in MenuObjects)
         {
-            if (menuObject.Menu == menu) 
-                menuObject.Activate(); 
-            else 
-                menuObject.Deactivate(); 
+            menu.Deactivate();
         }
         PlayLevelInfo.gameObject.SetActive(false);
+        menuObject.Activate();
+    }
+    public void GoToPreviousMenu()
+    {
+        GoToMenu(menuStack.Pop()); // Take the previous menu to go to. 
+        menuStack.Pop(); // Remove the added menu from going to the previous.
     }
 
     public void QuitGameButton()

@@ -22,9 +22,9 @@ public class Level : ScriptableObject
     {
         return _allLevelData.TryGetValue(levelName, out level);
     }
-    #endregion 
+    #endregion
 
-
+    #region Define structs & enums
     [Serializable]
     public struct DifficultyFields
     {
@@ -54,11 +54,9 @@ public class Level : ScriptableObject
             this.betweenBeats = betweenBeats;
             this.levelPostBeats = levelPostBeats;
         }
-    }
-
+    } 
     [Serializable]
-    public enum LevelType { Beat, Queue }
-
+    public enum LevelType { Beat, Queue } 
     [Serializable] 
     public struct Prereqs
     {
@@ -70,7 +68,7 @@ public class Level : ScriptableObject
             this.requiredLevels = requiredLevels;
         }
     }
-
+    #endregion
 
     // Name used to assist in saved data referencing
     // Used as an ID to make sure that where ever a level is being loaded (the button, the level, etc), it can also use the proper saved data there. 
@@ -81,14 +79,17 @@ public class Level : ScriptableObject
     public BeatCounts beatCounts = new BeatCounts(3, 1, 2); // Only valid for LevelType.Beat
     public Prereqs prereqs = new Prereqs(0, new Level[0]); // Determines which levels or score are necessary to access level
 
-    
+    [TextArea(3, 8)] 
+    [SerializeField] string Notes = "This is a notes section used to detail a level's purpose and what it introduces to the player.";
 
+    #region Methods
     public void GetLevelData(
         ref DifficultyFields difficulty,
         ref BeatElement[] beatElementsBank,
         ref BeatCounts beatCounts
         )
     {
+        var _ = this.Notes;
         difficulty = this.difficulty;
         beatElementsBank = this.beatElementsBank;
         beatCounts = this.beatCounts;
@@ -142,4 +143,5 @@ public class Level : ScriptableObject
                 ref levelPostBeats
             );
     }
+    #endregion
 }

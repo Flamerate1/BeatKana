@@ -4,6 +4,7 @@ public class MenuObject : MonoBehaviour
 {
     [SerializeField] MainMenuManager.Menu menu;
     public MainMenuManager.Menu Menu => menu;
+    //public string menuName;
 
     public void Activate()
     {

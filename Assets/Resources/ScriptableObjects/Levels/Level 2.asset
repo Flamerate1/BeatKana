@@ -21,10 +21,9 @@ MonoBehaviour:
     hideKana: 0
     mute: 0
   beatElementsBank:
-  - {fileID: 11400000, guid: 8a1bb002000588a40a69285c1f62a66b, type: 2}
-  - {fileID: 11400000, guid: ceeff8fd49bdf6c4fbd33789eb3f3d16, type: 2}
-  - {fileID: 11400000, guid: 964129858fbf1794286a088e7e4d5b18, type: 2}
-  - {fileID: 11400000, guid: 1009afd209a494243b0a8f15d4941991, type: 2}
+  - {fileID: 11400000, guid: 980624504f6194140bedd337e659b6c6, type: 2}
+  - {fileID: 11400000, guid: 2cf0b89756d3e8845b7918769e8111b5, type: 2}
+  - {fileID: 11400000, guid: 095cce8235dd0fc439111b6d3938eeae, type: 2}
   beatCounts:
     levelPreBeats: 3
     betweenBeats: 1
@@ -33,3 +32,4 @@ MonoBehaviour:
     minScore: 400
     requiredLevels:
     - {fileID: 11400000, guid: 0723f2178be5d4e43a98559bab4c13d4, type: 2}
+  Notes: 
