@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     private static string saveDataPath; // 
     public static PlayerSaveData PlayerSaveData; // Stores level progression, currencies, etc
     public static AudioManager AudioManager;
+    public static PlayManager PlayManager;
 
     private void Awake()
     {
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
 
     public static void PlayManagerSetFields(PlayManager.GMFields gmFields)
     {
+        GameManager.PlayManager = gmFields.PlayManager;
         GameManager.AudioManager = gmFields.AudioManager;
         GameManager.cam = gmFields.Camera;
         GameManager.CanvasRectTransform = gmFields.canvasRectTransform;

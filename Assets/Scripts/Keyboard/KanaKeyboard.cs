@@ -21,6 +21,11 @@ public class KanaKeyboard : MonoBehaviour
     {
         BigAKanaButton.gameObject.SetActive(false);
 
+        foreach (var kanaButton in GetComponentsInChildren<KanaButton>())
+        {
+            kanaButton.Init();
+        }
+
         //inputField = GameManager.inputField;
         //InputString = GameManager.InputString;
         KanaButtonGuide = gameObject.GetComponentInChildren<KanaButtonGuide>();
@@ -84,7 +89,7 @@ public class KanaKeyboard : MonoBehaviour
                 break;
             case var x when x == dakutenButton:
                 Debug.Log("Special key: " + dakutenButton);
-                if (KanaData.ToFromDakuten(lastChar, out char dakuten))
+                if (KanaData.ToDakuten(lastChar, out char dakuten))
                 {
                     InputString.RemoveFromEnd();
                     return dakuten.ToString();
@@ -92,7 +97,7 @@ public class KanaKeyboard : MonoBehaviour
                 break;
             case var x when x == komojiButton:
                 Debug.Log("Special key: " + komojiButton);
-                if (KanaData.ToFromKomoji(lastChar, out char komoji))
+                if (KanaData.ToKomoji(lastChar, out char komoji))
                 {
                     InputString.RemoveFromEnd();
                     return komoji.ToString();
@@ -100,7 +105,7 @@ public class KanaKeyboard : MonoBehaviour
                 break;
             case var x when x == handakutenButton:
                 Debug.Log("Special key: " + handakutenButton);
-                if (KanaData.ToFromHandakuten(lastChar, out char handakuten))
+                if (KanaData.ToHandakuten(lastChar, out char handakuten))
                 {
                     InputString.RemoveFromEnd();
                     return handakuten.ToString();

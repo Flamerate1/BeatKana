@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Android;
-using static UnityEngine.Rendering.DebugUI;
 
 public class KanaData
 {
@@ -9,37 +7,124 @@ public class KanaData
     //public static KanaData Instance => _instance ??= new KanaData();
     private static KanaData _instance = new KanaData();
 
-    private static Dictionary<char, char> komojiData = new Dictionary<char, char>();
-    private static Dictionary<char, char> dakutenData = new Dictionary<char, char>();
-    private static Dictionary<char, char> handakutenData = new Dictionary<char, char>();
-    private static Dictionary<char, char> switchData = new Dictionary<char, char>();
+    private static BiDictionary<char, char> toKomojiData = new BiDictionary<char, char>();
+    private static BiDictionary<char, char> toDakutenData = new BiDictionary<char, char>();
+    private static BiDictionary<char, char> toHandakutenData = new BiDictionary<char, char>();
+    private static BiDictionary<char, char> switchData = new BiDictionary<char, char>();
 
+    /*
+    private static Dictionary<char, char> toKomojiData = new Dictionary<char, char>();
+    private static Dictionary<char, char> toDakutenData = new Dictionary<char, char>();
+    private static Dictionary<char, char> toHandakutenData = new Dictionary<char, char>();
+    private static Dictionary<char, char> switchData = new Dictionary<char, char>();
+    */
     private static Dictionary<char, char> katakanaSwitchData = new Dictionary<char, char>();
     //private static BiDictionary<char, char> katakanaSwitchData = new BiDictionary<char, char>();
 
-    public static bool ToFromKomoji(char kana, out char opposite)
+    private struct data
     {
-        // Check small data
-        return komojiData.TryGetValue(kana, out opposite);
+        public string[] komoji, dakuten, handakuten, switchArray;
+        public string hiragana, katakana;
     }
-    public static bool ToFromDakuten(char kana, out char opposite)
+    private static data _data = new data()
     {
-        // Chekc dakuten data
-        return dakutenData.TryGetValue(kana, out opposite);
-    }
-    public static bool ToFromHandakuten(char kana, out char opposite)
-    {
-        // Check handakuten data
-        return handakutenData.TryGetValue(kana, out opposite);
-    }
-    public static bool SwitchKana(char kana, out char next)
-    {
-        // Check Switch data
-        return switchData.TryGetValue(kana, out next);
-    }
+        // Between big and small letters ONE WAY
+        komoji = new string[2] { // big, small
+            "あいえおやゆよつわ",
+            "ぁぃぇぉゃゅょっゎ"
+        },
+        dakuten = new string[2] { // normal, dakuten
+            "かきくけこさしすせそたちつてとはひふへほ",    // removed っぱぴぷぺぽ
+            "がぎぐげござじずぜぞだぢづでどばびぶべぼ"     // removed づばびぶべぼ
+        },
+        handakuten = new string[2] { // h_normal, h_handakuten
+            "はひふへほ",   // removed ばびぶべぼ
+            "ぱぴぷぺぽ"    // removed ぱぴぷぺぽ
+        },
+        switchArray = new string[4] { // normal, small, dakuten, handakuten
+            "あいうえおかきくけこさしすせそたちつてとはひふへほやゆよわ",
+            "ぁぃぅぇぉ　　　　　　　　　　　　っ　　　　　　　ゃゅょゎ",
+            "　　ゔ　　がぎぐげござじずぜぞだぢづでどばびぶべぼ　　　　",
+            "　　　　　　　　　　　　　　　　　　　　ぱぴぷぺぽ　　　　"
+        },
+        hiragana = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんぁぃぅぇぉゃゅょっゎがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゔ",
+        katakana = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンァィゥェォャュョッヮガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴ"
+    };
 
+    #region Kana Processing Methods
+    
+    // Keyboard Specific 
+    public static bool ToKomoji(char kana, out char opposite) => toKomojiData.TryGetValue(kana, out opposite); 
+    public static bool ToDakuten(char kana, out char opposite) => toDakutenData.TryGetValue(kana, out opposite); 
+    public static bool ToHandakuten(char kana, out char opposite) => toHandakutenData.TryGetValue(kana, out opposite); 
+    public static bool SwitchKana(char kana, out char next) => switchData.TryGetValue(kana, out next);
+    // END Keyboard Specific 
+
+    // Beat Processing
+    public static bool IsKomoji(char kana) => _data.komoji[1].Contains(kana);
+    public static bool IsDakuten(char kana) => _data.dakuten[1].Contains(kana); 
+    public static bool IsHandakuten(char kana) => _data.handakuten[1].Contains(kana);
+
+    public static bool FromKomoji(char kana, out char opposite) => toKomojiData.TryGetKey(kana, out opposite);
+    public static bool FromDakuten(char kana, out char opposite) => toDakutenData.TryGetKey(kana, out opposite);
+    public static bool FromHandakuten(char kana, out char opposite) => toHandakutenData.TryGetKey(kana, out opposite);
+
+
+    private static BiDictionary<char, char> testing = new BiDictionary<char, char>();
+    #endregion
 
     static KanaData()
+    {
+
+        // Between big and small letters ONE WAY
+        for (int i = 0; i < _data.komoji[0].Length; i++)
+        {
+            toKomojiData.Add(_data.komoji[0][i], _data.komoji[1][i]);
+        }
+
+        // Between dakuten and non dakuten letters ONE WAY
+        for (int i = 0; i < _data.dakuten[0].Length; i++)
+        {
+            toDakutenData.Add(_data.dakuten[0][i], _data.dakuten[1][i]);
+        }
+
+        // Between handakuten and non handakuten letters ONE WAY
+        for (int i = 0; i < _data.handakuten[0].Length; i++)
+        {
+            toHandakutenData.Add(_data.handakuten[0][i], _data.handakuten[1][i]);
+        }
+        
+        // algorithm for switchData
+            //1. Iterate over string.Length
+            //2. Loop over array.Length
+            //3. Once found non empty section, put that in dictionary
+            //4. Loop again but starting with the last Value. 
+            //5. If can't find anymore, new value is section from level 0. 
+
+        char space = '　';
+        for (int i = 0; i < _data.switchArray[0].Length; i++)
+        {
+            char key = _data.switchArray[0][i];
+            for (int j = 1; j < _data.switchArray.Length; j++)
+            {
+                char value = _data.switchArray[j][i];
+                if (value != space)
+                {
+                    switchData.Add(key, value);
+                    key = value;
+                }
+            }
+            switchData.Add(key, _data.switchArray[0][i]);
+        }
+
+        // Between hiragana and katakana TWO WAY
+        for (int i = 0; i < _data.hiragana.Length; i++)
+        {
+            katakanaSwitchData.Add(_data.hiragana[i], _data.katakana[i]);
+            katakanaSwitchData.Add(_data.katakana[i], _data.hiragana[i]);
+        }
+    }
+    /*static KanaData()
     {
         // Between big and small letters ONE WAY
         string big =
@@ -83,12 +168,12 @@ public class KanaData
             "　　　　　　　　　　　　　　　　　　　　ぱぴぷぺぽ　　　　";
 
         // algorithm for switchData
-        /*  1. Iterate over string.Length
-            2. Loop over array.Length
-            3. Once found non empty section, put that in dictionary
-            4. Loop again but starting with the last Value. 
-            5. If can't find anymore, new value is section from level 0. 
-         */
+            //1. Iterate over string.Length
+            //2. Loop over array.Length
+            //3. Once found non empty section, put that in dictionary
+            //4. Loop again but starting with the last Value. 
+            //5. If can't find anymore, new value is section from level 0. 
+         
 
         char space = '　';
         for (int i = 0; i < switchArray[0].Length; i++) 
@@ -116,7 +201,7 @@ public class KanaData
             katakanaSwitchData.Add(hiragana[i], katakana[i]);
             katakanaSwitchData.Add(katakana[i], hiragana[i]);
         }
-    }
+    }*/
 
 
 

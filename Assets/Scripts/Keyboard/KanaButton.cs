@@ -22,8 +22,64 @@ public class KanaButton : MonoBehaviour
 
     public void LockKey() { keyLocked = true; }
     bool keyLocked = false;
-    
 
+    public void Init()
+    {
+        kanaKeyboard = GetComponentInParent<KanaKeyboard>();
+        rectTransform = GetComponent<RectTransform>();
+
+        // If the dakuten key, set the special keys in kanaKeyboard to the one's created in the inspector
+        if (key.Contains("dakuten"))
+        {
+            bool isComboLvl = GameManager.PlayManager.GetLevelType() == Level.LevelType.BeatCombo;
+            if (key.Contains("Combo"))
+            {
+                if (!isComboLvl) Destroy(gameObject);
+            }
+            else
+            {
+                if (isComboLvl) Destroy(gameObject);
+                kanaKeyboard.SetDakutenSpecialKeys(keys);
+            }
+        }
+    }
+    // Using initial and current position touch, detect which of the 5 keys are currently being selected. 
+    private int KeyDetect(Vector2 centerPos, Vector2 touchPos)
+    {
+        // If close to the initial touch, output the center "A" key
+        if (Vector2.Distance(touchPos, centerPos) < maxCenterDist)
+        {
+            return 0;
+        }
+        else
+        {
+            // Use coordinate quadrant to register direction of touch
+
+            // 1. Get relative touch vector to button center
+            Vector2 relPos = touchPos - centerPos;
+
+            // 2. Rotate relPos vector by -45 degrees
+            Quaternion rot = Quaternion.AngleAxis(-45f, Vector3.forward);
+            Vector2 rotatedVector = rot * (touchPos - centerPos);
+
+            // 3. Flip the x-axis to reorder the quadrants clockwise instead of counter clockwise.
+            rotatedVector.x *= -1;
+
+            // Detect and return coordinate quadrant
+            if (rotatedVector.x >= 0f)
+            {
+                if (rotatedVector.y >= 0f) return 1;
+                else return 4;
+            }
+            else
+            {
+                if (rotatedVector.y >= 0f) return 2;
+                else return 3;
+            }
+        }
+    }
+
+    #region TouchManager Functionality
     private void OnEnable()
     {
         GameManager.OnResolutionChanged += ResetCorners;
@@ -87,53 +143,6 @@ public class KanaButton : MonoBehaviour
         }
     }
 
-    // Using initial and current position touch, detect which of the 5 keys are currently being selected. 
-    private int KeyDetect(Vector2 centerPos, Vector2 touchPos)
-    {
-        // If close to the initial touch, output the center "A" key
-        if (Vector2.Distance(touchPos, centerPos) < maxCenterDist) 
-        {
-            return 0;
-        }
-        else
-        {
-            // Use coordinate quadrant to register direction of touch
-
-            // 1. Get relative touch vector to button center
-            Vector2 relPos = touchPos - centerPos;
-
-            // 2. Rotate relPos vector by -45 degrees
-            Quaternion rot = Quaternion.AngleAxis(-45f, Vector3.forward);
-            Vector2 rotatedVector = rot * (touchPos - centerPos);
-
-            // 3. Flip the x-axis to reorder the quadrants clockwise instead of counter clockwise.
-            rotatedVector.x *= -1;
-
-            // Detect and return coordinate quadrant
-            if (rotatedVector.x >= 0f) 
-            {
-                if (rotatedVector.y >= 0f) return 1; 
-                else return 4; 
-            }
-            else 
-            {
-                if (rotatedVector.y >= 0f) return 2; 
-                else return 3; 
-            }
-        }
-    }
-
-    void Start()
-    {
-        kanaKeyboard = GetComponentInParent<KanaKeyboard>();
-        rectTransform = GetComponent<RectTransform>();
-
-        // If the dakuten key, set the special keys in kanaKeyboard to the one's created in the inspector
-        if (key == "dakuten") 
-            kanaKeyboard.SetDakutenSpecialKeys(keys); 
-    }
-
-
     void ResetCorners()
     {
 
@@ -147,4 +156,5 @@ public class KanaButton : MonoBehaviour
 
         maxCenterDist = Vector2.Distance(buttonCenter, buttonTR) / maxCenterDistScale;
     }
+    #endregion
 }

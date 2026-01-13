@@ -34,7 +34,7 @@ public abstract class Timeline : MonoBehaviour
     protected Beat currentBeat; // Reference to the current Beat class instance
     protected List<Beat> beatList; /// List of beat classes
     protected GameObject timelineBeatPrefab; // the actual visual beat prefab that reacts to input
-    protected TimelineBeat[] beatObjects; // the list of beat objects that can be manipulated
+    protected TimelineBeatObject[] beatObjects; // the list of beat objects that can be manipulated
 
     // Visual Section
     protected GameObject beatLine; // Visual guideline made at every beat position. 

@@ -99,10 +99,10 @@ public class QueueTimeline : Timeline
     }
 
     // This method instantiates the beat prefabs into child objects of the Timeline. 
-    TimelineBeat[] MakeBeats(List<Beat> beatList)
+    TimelineBeatObject[] MakeBeats(List<Beat> beatList)
     {
         // TimelineBeat component array to return
-        TimelineBeat[] beatObjects = new TimelineBeat[beatList.Count];
+        TimelineBeatObject[] beatObjects = new TimelineBeatObject[beatList.Count];
 
         // Iterate over all of the beat class instances
         for (int i = 0; i < beatList.Count; i++)
@@ -116,7 +116,7 @@ public class QueueTimeline : Timeline
 
             if (beatList[i].text == string.Empty) continue; // skip if empty string beat class
             GameObject gameObject = Instantiate(timelineBeatPrefab, pos1, Quaternion.identity, transform); // Create the object
-            beatObjects[i] = gameObject.GetComponent<TimelineBeat>(); // Grab the component
+            beatObjects[i] = gameObject.GetComponent<TimelineBeatObject>(); // Grab the component
             beatObjects[i].SetBeat(beatList[i]); 
         }
 

@@ -19,4 +19,6 @@ public abstract class BeatElement : ScriptableObject
      */
 
     public abstract void ProcessToBeat(ref List<Beat> beatList);
+
+    public abstract void ProcessToComboBeat(ref List<Beat> beatList);
 }

@@ -24,4 +24,19 @@ public class BeatPhrase : BeatElement
         }
 
     }
+
+    public override void ProcessToComboBeat(ref List<Beat> beatList)
+    {
+        int beatListStartIndex = beatList.Count; // Get the starting point. 
+
+        for (int i = 0; i < this.beatWords.Length; i++) // Iterate through characters and add them to beatlist. 
+        {
+            this.beatWords[i].ProcessToComboBeat(ref beatList);
+        }
+
+        for (int i = beatListStartIndex; i < beatList.Count; i++)
+        {
+            beatList[i].sprite = this.sprite;
+        }
+    }
 }

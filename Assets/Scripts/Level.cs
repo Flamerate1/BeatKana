@@ -56,7 +56,7 @@ public class Level : ScriptableObject
         }
     } 
     [Serializable]
-    public enum LevelType { Beat, Queue } 
+    public enum LevelType { Beat, Queue, BeatCombo } 
     [Serializable] 
     public struct Prereqs
     {

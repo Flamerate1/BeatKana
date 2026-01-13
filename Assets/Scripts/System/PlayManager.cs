@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class PlayManager : MonoBehaviour
     [Serializable]
     public struct GMFields // GameManager Fields
     {
+        public PlayManager PlayManager;
         public AudioManager AudioManager;
         public Camera Camera;
         public RectTransform canvasRectTransform;
@@ -26,13 +28,14 @@ public class PlayManager : MonoBehaviour
         public TMP_Text scoreDisplay;
     }
 
-    [SerializeField] Level.LevelType levelType;
+    [SerializeField] Level.LevelType levelType; public Level.LevelType GetLevelType() => levelType;
 
     [SerializeField] GMFields gmFields; // Variables to set for the GameManager
     [SerializeField] TLFields tlFields; // Variables to set for the Timeline
 
     [SerializeField] Timeline BeatTimeline;
     [SerializeField] Timeline QueueTimeline;
+    [SerializeField] Timeline BeatComboTimeline;
     Timeline Timeline;
 
     [SerializeField] KanaKeyboard KanaKeyboard;
@@ -41,6 +44,8 @@ public class PlayManager : MonoBehaviour
 
     private void Start()
     {
+        gmFields.PlayManager = this;
+
         // Initialize GameManager
         GameManager.PlayManagerSetFields(gmFields); 
         GameManager.InitializePlayScene();
@@ -51,6 +56,20 @@ public class PlayManager : MonoBehaviour
             Debug.Log("Grabbing GM's LevelType");
         }
 
+        Dictionary<Level.LevelType, Timeline> _tl = new Dictionary<Level.LevelType, Timeline>();
+        _tl.Add(Level.LevelType.Beat, BeatTimeline);
+        _tl.Add(Level.LevelType.Queue, QueueTimeline);
+        _tl.Add(Level.LevelType.BeatCombo, BeatComboTimeline);
+
+        foreach (KeyValuePair<Level.LevelType, Timeline> tl in _tl)
+        {
+            if (levelType == tl.Key)
+                Timeline = tl.Value;
+            else
+                Destroy(tl.Value.gameObject);
+        }
+
+        /*
         // Set the current timeline. 
         switch (levelType) {
             case Level.LevelType.Beat:
@@ -62,7 +81,8 @@ public class PlayManager : MonoBehaviour
                 Timeline = QueueTimeline;
                 Destroy(BeatTimeline.gameObject);
                 break;
-        }
+
+        }*/
 
         Timeline.PlayManagerSetFields(tlFields);
         Timeline.StartGame();

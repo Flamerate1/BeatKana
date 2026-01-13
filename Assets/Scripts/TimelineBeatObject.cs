@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TimelineBeat : MonoBehaviour
+public class TimelineBeatObject : MonoBehaviour
 {
     TMP_Text textMeshPro;
 

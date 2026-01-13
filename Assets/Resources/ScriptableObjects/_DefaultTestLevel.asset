@@ -15,15 +15,15 @@ MonoBehaviour:
   LevelName: TESTING
   levelType: 0
   difficulty:
-    BPM: 35
-    BeatDistance: 5
+    BPM: 60
+    BeatDistance: 1
     maxBeatError: 0.45
     hideKana: 0
     mute: 0
   beatElementsBank:
-  - {fileID: 11400000, guid: d945314c7a858a146b6d144395e0e83b, type: 2}
-  - {fileID: 11400000, guid: 3ca8540dfa1605a4cb62f015b7465ce3, type: 2}
+  - {fileID: 11400000, guid: 7fde302517ad8b3469558a3fb0280567, type: 2}
   - {fileID: 11400000, guid: bbc039f2a3bcd6c4fbf84349ec0dc64f, type: 2}
+  - {fileID: 11400000, guid: 514da18de6334aa43b01315e92e50974, type: 2}
   beatCounts:
     levelPreBeats: 1
     betweenBeats: 1
@@ -31,3 +31,5 @@ MonoBehaviour:
   prereqs:
     minScore: 0
     requiredLevels: []
+  Notes: This is a notes section used to detail a level's purpose and what it introduces
+    to the player.
